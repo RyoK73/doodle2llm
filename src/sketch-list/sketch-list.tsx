@@ -1,4 +1,9 @@
 import Link from "next/link";
+import { cn } from "cn";
+import {
+  sketchListClassName,
+  sketchListItemClassName,
+} from "@/sketch-list/constants";
 import { createSupabaseServerClient } from "@/supabase/utils/serverClient";
 import { getSketchList } from "@/supabase/sketch-crud/getSketchList";
 import { LocalTime } from "@/design-system/local-time";
@@ -16,12 +21,15 @@ const SketchList = async () => {
   }
 
   return (
-    <ul className="flex flex-col gap-3">
+    <ul className={sketchListClassName}>
       {result.value.map((sketch) => (
         <li key={sketch.id}>
           <Link
             href={`/sketches/${sketch.id}`}
-            className="brush-a rotate-0 flex flex-col gap-1 border bg-background p-4 transition-colors hover:bg-accent"
+            className={cn(
+              sketchListItemClassName,
+              "transition-colors hover:bg-accent",
+            )}
           >
             <span className="text-label-md">{sketch.title}</span>
             {sketch.description && (
