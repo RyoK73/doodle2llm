@@ -121,7 +121,7 @@ tooltipは、項目の右側に出します(`TOOLTIP_SIDE`は`"right"`)。
 
 `TitleToolbar`(`src/sketch-detail/title-toolbar/title-toolbar.tsx`)は、Client Componentです。
 キャンバスの上に重ねて、上部中央に浮かせます。
-`index.ts`が公開するのは`TitleToolbar`のみです。
+`index.ts`が公開するのは、`TitleToolbar`と`TitleToolbarSkeleton`です。
 
 - `title`と`description`は、常に入力欄として表示します。
   入力欄は、フォーカスされるまで枠を出しません。
@@ -130,15 +130,17 @@ tooltipは、項目の右側に出します(`TOOLTIP_SIDE`は`"right"`)。
 - 入力の検証と保存は、[スケッチの保存](./save.ja.md)を参照してください。
 - アイコンボタンを持たないので、tooltipはありません。
 - 位置と幅のクラスは、`title-toolbar/constants.ts`の`titleToolbarPositionClassName`で持ちます。
-  取得中に出す`SketchDetailSkeleton`(`src/sketch-detail/sketch-detail-skeleton.tsx`)と共有します。
+  取得中に出すスケルトン(`title-toolbar-skeleton.tsx`の`TitleToolbarSkeleton`)と共有します。
 
 ## 操作用ツールバー
 
 `ControlToolbar`(`src/sketch-detail/control-toolbar/control-toolbar.tsx`)は、キャンバスの上に重ねて、画面の下端から少し浮かせて中央に置きます。
 ツールバー自身が枠と配置(`absolute`)を持ち、中身は`children`で受け取ります。
-`index.ts`が公開するのは、`ControlToolbar`と`ZoomControls`です。
+`index.ts`が公開するのは、`ControlToolbar`と`ZoomControls`、およびそれぞれのスケルトンです。
 tooltipは、項目の上側に出します(`control-toolbar/constants.ts`の`TOOLTIP_SIDE`は`"top"`)。
-位置のクラスは、同じ`constants.ts`の`controlToolbarPositionClassName`で持ち、`SketchDetailSkeleton`と共有します。
+位置のクラスは、同じ`constants.ts`の`controlToolbarPositionClassName`で持ち、`ControlToolbarSkeleton`と共有します。
+取得中に出すスケルトンは、実物と同じ構成で、`ControlToolbarSkeleton`、`ShapeNavigationSkeleton`、`ZoomControlsSkeleton`がそれぞれ持ちます。
+ボタンの数を変えるときは、同じディレクトリのスケルトンも直します。
 
 中身は、図形用ナビ(`ShapeNavigation`)とズームの操作(`ZoomControls`)です。
 
@@ -167,7 +169,7 @@ tooltipは、項目の上側に出します(`control-toolbar/constants.ts`の`TO
 キャンバスの上に重ねて、画面の右端から`right-4`の位置に固定し(`absolute`)、縦中央に表示します。
 表示のオン/オフは切り替えず、常時表示します。
 ボタンは縦に並びます。
-`index.ts`が公開するのは`HandoffToolbar`のみです。
+`index.ts`が公開するのは、`HandoffToolbar`と`HandoffToolbarSkeleton`です。
 
 | ボタン       | コンポーネント        | アイコン     | tooltip            |
 | ------------ | --------------------- | ------------ | ------------------ |
@@ -177,7 +179,8 @@ tooltipは、項目の上側に出します(`control-toolbar/constants.ts`の`TO
 どちらも`IconButton`で表示します。
 キャンバスの読み込み前(`isLoaded`が`false`)は、無効です。
 tooltipは、項目の左側に出します(`handoff-toolbar/constants.ts`の`TOOLTIP_SIDE`は`"left"`)。
-位置のクラスは、同じ`constants.ts`の`handoffToolbarPositionClassName`で持ち、`SketchDetailSkeleton`と共有します。
+位置のクラスは、同じ`constants.ts`の`handoffToolbarPositionClassName`で持ち、取得中に出すスケルトン(`handoff-toolbar-skeleton.tsx`の`HandoffToolbarSkeleton`)と共有します。
+ボタンを増減するときは、`HandoffToolbarSkeleton`の箱の数も直します。
 
 ### PNGの作り方
 

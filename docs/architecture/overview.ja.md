@@ -144,7 +144,7 @@ fabric.jsだけは、`^`を付けずにバージョンを固定しています�
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `sketch-detail.tsx`          | Server Component。`getSketch`で取得した1件を`SketchEditor`に渡します。                                                                     |
 | `sketch-editor.tsx`          | Client Component。`TitleToolbar`で検証を通ったタイトルと説明を保持し、`SketchCanvas`に渡します。                                           |
-| `sketch-detail-skeleton.tsx` | 取得中に出すスケルトンです。キャンバスの紙と3つのツールバーの枠を、本物と同じ位置に置きます。                                              |
+| `sketch-detail-skeleton.tsx` | 取得中に出すスケルトンです。キャンバスの紙の上に、各ツールバーのスケルトン(各ディレクトリの`*-skeleton.tsx`)を並べるだけです。             |
 | `sketch-canvas.tsx`          | Client Component。キャンバス、操作用ツールバー(`ControlToolbar`)、自動保存を担当します。                                                   |
 | `title-toolbar/`             | タイトル用ツールバー(`TitleToolbar`)。タイトルと説明の入力欄、サイズ、更新日時を表示します。入力値の検証(`validateSketchMeta`)もあります。 |
 | `control-toolbar/`           | 操作用ツールバー(`ControlToolbar`)の枠と、ズームの操作(`zoom-controls/`の`ZoomControls`)、図形の追加・削除ボタンなど(`ShapeNavigation`)    |
