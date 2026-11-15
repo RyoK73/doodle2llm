@@ -129,6 +129,8 @@ tooltipは、項目の右側に出します(`TOOLTIP_SIDE`は`"right"`)。
 - `width × height`と更新日時は、表示のみです。
 - 入力の検証と保存は、[スケッチの保存](./save.ja.md)を参照してください。
 - アイコンボタンを持たないので、tooltipはありません。
+- 位置と幅のクラスは、`title-toolbar/constants.ts`の`titleToolbarPositionClassName`で持ちます。
+  取得中に出す`SketchDetailSkeleton`(`src/sketch-detail/sketch-detail-skeleton.tsx`)と共有します。
 
 ## 操作用ツールバー
 
@@ -136,6 +138,7 @@ tooltipは、項目の右側に出します(`TOOLTIP_SIDE`は`"right"`)。
 ツールバー自身が枠と配置(`absolute`)を持ち、中身は`children`で受け取ります。
 `index.ts`が公開するのは、`ControlToolbar`と`ZoomControls`です。
 tooltipは、項目の上側に出します(`control-toolbar/constants.ts`の`TOOLTIP_SIDE`は`"top"`)。
+位置のクラスは、同じ`constants.ts`の`controlToolbarPositionClassName`で持ち、`SketchDetailSkeleton`と共有します。
 
 中身は、図形用ナビ(`ShapeNavigation`)とズームの操作(`ZoomControls`)です。
 
@@ -174,6 +177,7 @@ tooltipは、項目の上側に出します(`control-toolbar/constants.ts`の`TO
 どちらも`IconButton`で表示します。
 キャンバスの読み込み前(`isLoaded`が`false`)は、無効です。
 tooltipは、項目の左側に出します(`handoff-toolbar/constants.ts`の`TOOLTIP_SIDE`は`"left"`)。
+位置のクラスは、同じ`constants.ts`の`handoffToolbarPositionClassName`で持ち、`SketchDetailSkeleton`と共有します。
 
 ### PNGの作り方
 

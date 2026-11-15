@@ -3,6 +3,7 @@ import { cn } from "cn";
 import { floatingToolbarClassName } from "@/design-system/constants";
 import { LocalTime } from "@/design-system/local-time";
 import { useSaveMeta } from "@/sketch-detail/save/useSaveMeta";
+import { titleToolbarPositionClassName } from "@/sketch-detail/title-toolbar/constants";
 import type { SketchMeta } from "@/supabase/sketch-crud/updateSketchMeta.types";
 
 type TitleToolbarProps = {
@@ -44,7 +45,8 @@ const TitleToolbar = ({
     <div
       className={cn(
         floatingToolbarClassName,
-        "absolute top-4 left-1/2 z-10 flex w-md max-w-[80%] -translate-x-1/2 flex-col gap-1 px-4 py-3",
+        titleToolbarPositionClassName,
+        "flex flex-col gap-1 px-4 py-3",
       )}
     >
       <input

@@ -129,6 +129,8 @@ It floats over the canvas at the top center.
 - `width × height` and the updated time are display only.
 - See [Saving sketches](./save.en.md) for the validation and the saving of the input.
 - It has no icon buttons, so it has no tooltip.
+- The classes of the position and the width are in `titleToolbarPositionClassName` in `title-toolbar/constants.ts`.
+  They are shared with `SketchDetailSkeleton` (`src/sketch-detail/sketch-detail-skeleton.tsx`), which is shown while fetching.
 
 ## Control toolbar
 
@@ -136,6 +138,7 @@ It floats over the canvas at the top center.
 The toolbar has its own frame and position (`absolute`), and receives its content as `children`.
 `index.ts` exports `ControlToolbar` and `ZoomControls`.
 The tooltip opens above the item (`TOOLTIP_SIDE` in `control-toolbar/constants.ts` is `"top"`).
+The classes of the position are in `controlToolbarPositionClassName` in the same `constants.ts`, and are shared with `SketchDetailSkeleton`.
 
 The content is the shape navigation (`ShapeNavigation`) and the zoom controls (`ZoomControls`).
 
@@ -174,6 +177,7 @@ Its buttons are lined up vertically.
 Both are shown with `IconButton`.
 They are disabled until the canvas is loaded (`isLoaded` is `true`).
 The tooltip opens on the left of the item (`TOOLTIP_SIDE` in `handoff-toolbar/constants.ts` is `"left"`).
+The classes of the position are in `handoffToolbarPositionClassName` in the same `constants.ts`, and are shared with `SketchDetailSkeleton`.
 
 ### How the PNG is made
 
