@@ -7,7 +7,7 @@ function SkeletonBar({ className, ...props }: React.ComponentProps<"span">) {
     <span
       data-slot="skeleton-bar"
       className={cn(
-        "block h-1lh animate-pulse rounded-sm bg-muted motion-reduce:animate-none",
+        "block h-lh animate-pulse rounded-sm bg-muted motion-reduce:animate-none",
         className,
       )}
       {...props}
