@@ -7,7 +7,7 @@ const ShapeNavigationSkeleton = () => {
   return (
     <div>
       {Array.from({ length: BUTTON_COUNT }, (_, index) => (
-        <SkeletonBox key={index} className="inline-block size-10" />
+        <SkeletonBox key={index} className="inline-flex size-10" />
       ))}
     </div>
   );
