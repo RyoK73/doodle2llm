@@ -2,6 +2,7 @@ import type { RefObject } from "react";
 import type * as fabric from "fabric";
 import { cn } from "cn";
 import { iconItemListClassName } from "@/design-system/constants";
+import { handoffToolbarPositionClassName } from "@/sketch-detail/handoff-toolbar/constants";
 import { CopyImageButton } from "@/sketch-detail/handoff-toolbar/copy-image-button/copy-image-button";
 import { DownloadImageButton } from "@/sketch-detail/handoff-toolbar/download-image-button/download-image-button";
 import type { Frame } from "@/sketch-detail/handoff-toolbar/exportFramePng";
@@ -26,7 +27,8 @@ const HandoffToolbar = ({
       aria-label="受け渡し"
       className={cn(
         iconItemListClassName,
-        "absolute top-1/2 right-4 z-10 -translate-y-1/2 flex-col",
+        handoffToolbarPositionClassName,
+        "flex-col",
       )}
     >
       <CopyImageButton
