@@ -94,7 +94,8 @@
 `src/app/sketches/[id]/page.tsx`は、`src/sketch-detail/`の`SketchDetail`を表示します。
 
 - `SketchDetail`は、`id`がuuidでない場合に`notFound()`を呼びます。
-- `createSupabaseServerClient`で作成したクライアントを`getSketch`(`src/supabase/sketch-crud/getSketch.ts`)に渡します。
+- `getSketchCached`(`src/sketch-detail/getSketchCached.ts`)を呼びます。
+  `getSketchCached`は、`createSupabaseServerClient`で作成したクライアントを`getSketch`(`src/supabase/sketch-crud/getSketch.ts`)に渡します。
 - `getSketch`はサーバー専用(`server-only`)です。
   `id`、`title`、`description`、`width`、`height`、`created_at`、`updated_at`に加えて、キャンバスの復元に必要な`canvas_json`、`cell_size`、`frame_id`を取得します。
   `fabric_version`も取得しますが、アプリでは使っていません。
@@ -128,6 +129,58 @@
   そのため、エラー時も`NavigationMenu`が残ります。
 - `global-error.tsx`はありません。
   ルート`layout.tsx`のエラーは、Next.js既定の画面が表示されます。
+
+## titleとmetadata
+
+`src/app/layout.tsx`が、サイト共通のmetadataを定義します。
+各ページは、`title`だけを指定します。
+
+### 共通のmetadata(`src/app/layout.tsx`)
+
+| 項目             | 値                                                                                                                         |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `metadataBase`   | `getSiteUrl()`(`src/utils/getSiteUrl.ts`)の値を`URL`にしたものです。環境変数は[環境変数](../setup/environment.ja.md)を参照 |
+| `title.default`  | `Ultra-Simple-Wireframer`。ページが`title`を指定しないときの値です                                                         |
+| `title.template` | `%s \| Ultra-Simple-Wireframer`。ページが`title`を指定したとき、`%s`にその値が入ります                                     |
+| `description`    | 「思いついたアイデアをその場でスケッチして、そのままLLMに渡せるキャンバスです」                                            |
+| `openGraph`      | `type`は`website`、`siteName`、`locale`は`ja_JP`、`title`、`description`です。`url`と`images`は指定していません            |
+
+- `<html lang>`は`ja`固定です。
+- サイト名と説明は、`layout.tsx`の定数(`SITE_NAME`、`SITE_DESCRIPTION`)です。
+
+### ページごとのtitle
+
+| パス             | 指定方法           | title                                |
+| ---------------- | ------------------ | ------------------------------------ |
+| `/`              | 指定なし           | `Ultra-Simple-Wireframer`(`default`) |
+| `/signin`        | `metadata`         | `サインイン`                         |
+| `/signup`        | `metadata`         | `アカウント登録`                     |
+| `/sketches`      | `metadata`         | `スケッチ`                           |
+| `/sketches/[id]` | `generateMetadata` | スケッチの`title`(次の節を参照)      |
+
+- `not-found.tsx`と`error.tsx`は、`title`を指定しません。
+- `title.template`により、`/signin`の表示は`サインイン | Ultra-Simple-Wireframer`になります。
+
+### `/sketches/[id]`の`generateMetadata`
+
+`src/app/sketches/[id]/page.tsx`の`generateMetadata`は、`id`を取り出して、`src/sketch-detail/`の`generateSketchMetadata`に渡すだけです。
+
+- `generateSketchMetadata`は、`getSketchCached`で取得したスケッチの`title`を返します。
+- `getSketchCached`は、`getSketch`を`cache()`で包んだ関数です。
+  `SketchDetail`も同じ関数を使います。
+  同じリクエストの中で、取得結果を共有するためです。
+- `cache()`は引数を参照で比較するので、`getSketchCached`の引数は`id`(文字列)だけにしています。
+  クライアントは、関数の中で作ります。
+- `generateSketchMetadata`は、エラーを投げません。
+  画面のエラー表示と404は、`SketchDetail`が担当します。
+- `id`がuuidかどうかは、`SketchDetail`だけが判定します。
+
+| 状態                                     | 返す値                          |
+| ---------------------------------------- | ------------------------------- |
+| 取得成功、`title`が空白でない            | `{ title }`                     |
+| 取得成功、`title`が空文字か空白のみ      | `{}`(`title.default`になります) |
+| `null`(存在しない、または他人のスケッチ) | `{}`                            |
+| 取得失敗                                 | `{}`                            |
 
 ## Web Analytics
 

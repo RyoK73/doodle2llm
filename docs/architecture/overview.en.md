@@ -26,24 +26,24 @@ On saving, the version at that time is recorded in the DB as `fabric_version`.
 The codebase is split by what it does (vertical).
 See [Directory structure](../rules/directory-structure.en.md) for the rule.
 
-| Directory                       | Role                                                       |
-| ------------------------------- | ---------------------------------------------------------- |
-| `src/app/`                      | Routing only                                               |
-| `src/proxy.ts`                  | Next.js proxy. Refreshes the auth session on each request  |
-| `src/instrumentation-client.ts` | Client-side setup. Registers the paths that BotID protects |
-| `src/analytics/`                | Web Analytics (with a rule to exclude some pages)          |
-| `src/auth-form/`                | The form for sign-in and guest registration                |
-| `src/landing-page/`             | Showing the landing page (buttons by auth state)           |
-| `src/navigation-menu/`          | The navigation menu (items by auth state)                  |
-| `src/new-sketch/`               | Creating a sketch (button and Server Action)               |
-| `src/sketch-detail/`            | The sketch page (showing, drawing and saving to the DB)    |
-| `src/design-system/`            | Generic UI parts                                           |
-| `src/sketch-list/`              | Showing the sketch list (Server and Client Components)     |
-| `src/error-pages/`              | Shared parts for the 404 and error pages                   |
-| `src/supabase/`                 | Supabase clients, auth, CRUD and DB tests                  |
-| `src/utils/`                    | Shared types                                               |
-| `src/dev-scripts/`              | Scripts for development                                    |
-| `src/test/`                     | Pure helpers for tests                                     |
+| Directory                       | Role                                                          |
+| ------------------------------- | ------------------------------------------------------------- |
+| `src/app/`                      | Routing only                                                  |
+| `src/proxy.ts`                  | Next.js proxy. Refreshes the auth session on each request     |
+| `src/instrumentation-client.ts` | Client-side setup. Registers the paths that BotID protects    |
+| `src/analytics/`                | Web Analytics (with a rule to exclude some pages)             |
+| `src/auth-form/`                | The form for sign-in and guest registration                   |
+| `src/landing-page/`             | Showing the landing page (buttons by auth state)              |
+| `src/navigation-menu/`          | The navigation menu (items by auth state)                     |
+| `src/new-sketch/`               | Creating a sketch (button and Server Action)                  |
+| `src/sketch-detail/`            | The sketch page (showing, drawing and saving to the DB)       |
+| `src/design-system/`            | Generic UI parts                                              |
+| `src/sketch-list/`              | Showing the sketch list (Server and Client Components)        |
+| `src/error-pages/`              | Shared parts for the 404 and error pages                      |
+| `src/supabase/`                 | Supabase clients, auth, CRUD and DB tests                     |
+| `src/utils/`                    | Shared types and the function for the site URL (`getSiteUrl`) |
+| `src/dev-scripts/`              | Scripts for development                                       |
+| `src/test/`                     | Pure helpers for tests                                        |
 
 ## Drawing (`canvas/`, `shapes/`, `selection/`, `history/` and `viewport/` in `src/sketch-detail/`)
 
@@ -142,7 +142,9 @@ See [Authentication](./auth.en.md) for details.
 
 | File                         | Role                                                                                                                                                                      |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sketch-detail.tsx`          | Server Component. Passes the sketch got by `getSketch` to `SketchEditor`                                                                                                  |
+| `sketch-detail.tsx`          | Server Component. Passes the sketch got by `getSketchCached` to `SketchEditor`                                                                                            |
+| `getSketchCached.ts`         | `getSketch` wrapped with `cache()`. It takes only `id`, and creates the client of `createSupabaseServerClient` inside                                                     |
+| `generateSketchMetadata.ts`  | The body of `generateMetadata` of `/sketches/[id]`. Returns the `title` of the sketch got by `getSketchCached`                                                            |
 | `sketch-editor.tsx`          | Client Component. Holds the title and description that `TitleToolbar` has validated, and passes them to `SketchCanvas`                                                    |
 | `sketch-detail-skeleton.tsx` | The skeleton shown while fetching. It only puts the skeletons of the toolbars (`*-skeleton.tsx` in each directory) on the paper of the canvas                             |
 | `sketch-canvas.tsx`          | Client Component. Handles the canvas, the control toolbar (`ControlToolbar`) and auto-save                                                                                |
@@ -155,7 +157,7 @@ See [Authentication](./auth.en.md) for details.
 | `history/`                   | Undo / redo (see the section above)                                                                                                                                       |
 | `viewport/`                  | Fixed frame, pan and zoom (see the section above and [Fixed frame, pan and zoom](./viewport.en.md))                                                                       |
 | `save/`                      | Hooks and functions for saving to the DB (see [Saving sketches](./save.en.md))                                                                                            |
-| `index.ts`                   | Exports `SketchDetail` and `SketchDetailSkeleton`                                                                                                                         |
+| `index.ts`                   | Exports `SketchDetail`, `SketchDetailSkeleton` and `generateSketchMetadata`                                                                                               |
 
 Details of `SketchCanvas`:
 

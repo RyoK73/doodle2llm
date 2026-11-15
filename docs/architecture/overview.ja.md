@@ -41,7 +41,7 @@ fabric.jsだけは、`^`を付けずにバージョンを固定しています�
 | `src/design-system/`            | 汎用UI部品                                                   |
 | `src/error-pages/`              | 404とエラー画面の共通部品                                    |
 | `src/supabase/`                 | Supabaseのクライアント、認証、CRUD、DBテスト                 |
-| `src/utils/`                    | 共通の型                                                     |
+| `src/utils/`                    | 共通の型と、サイトURLを返す関数(`getSiteUrl`)                |
 | `src/dev-scripts/`              | 開発用スクリプト                                             |
 | `src/test/`                     | テスト用のヘルパー                                           |
 
@@ -142,7 +142,9 @@ fabric.jsだけは、`^`を付けずにバージョンを固定しています�
 
 | ファイル                     | 役割                                                                                                                                       |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `sketch-detail.tsx`          | Server Component。`getSketch`で取得した1件を`SketchEditor`に渡します。                                                                     |
+| `sketch-detail.tsx`          | Server Component。`getSketchCached`で取得した1件を`SketchEditor`に渡します。                                                               |
+| `getSketchCached.ts`         | `getSketch`を`cache()`で包んだ関数です。引数は`id`だけで、中で`createSupabaseServerClient`のクライアントを作ります。                       |
+| `generateSketchMetadata.ts`  | `/sketches/[id]`の`generateMetadata`の本体です。`getSketchCached`で取得したスケッチの`title`を返します。                                   |
 | `sketch-editor.tsx`          | Client Component。`TitleToolbar`で検証を通ったタイトルと説明を保持し、`SketchCanvas`に渡します。                                           |
 | `sketch-detail-skeleton.tsx` | 取得中に出すスケルトンです。キャンバスの紙の上に、各ツールバーのスケルトン(各ディレクトリの`*-skeleton.tsx`)を並べるだけです。             |
 | `sketch-canvas.tsx`          | Client Component。キャンバス、操作用ツールバー(`ControlToolbar`)、自動保存を担当します。                                                   |
@@ -155,7 +157,7 @@ fabric.jsだけは、`^`を付けずにバージョンを固定しています�
 | `history/`                   | undo/redo(前節を参照)                                                                                                                      |
 | `viewport/`                  | 固定枠、パン、ズーム(前節と[固定枠とパン・ズーム](./viewport.ja.md)を参照)                                                                 |
 | `save/`                      | DBへの保存に関するフックと関数([スケッチの保存](./save.ja.md)を参照)                                                                       |
-| `index.ts`                   | 公開するのは`SketchDetail`と`SketchDetailSkeleton`です。                                                                                   |
+| `index.ts`                   | 公開するのは`SketchDetail`、`SketchDetailSkeleton`、`generateSketchMetadata`の3つです。                                                    |
 
 `SketchCanvas`の詳細は、次の通りです。
 
