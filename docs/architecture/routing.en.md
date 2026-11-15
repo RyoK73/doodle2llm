@@ -94,7 +94,8 @@ The new-sketch button is rendered by `NewSketchIconButton` in `NavigationMenu`, 
 `src/app/sketches/[id]/page.tsx` renders `SketchDetail` from `src/sketch-detail/`.
 
 - `SketchDetail` calls `notFound()` when `id` is not a uuid.
-- It passes a client made by `createSupabaseServerClient` to `getSketch` (`src/supabase/sketch-crud/getSketch.ts`).
+- It calls `getSketchCached` (`src/sketch-detail/getSketchCached.ts`).
+  `getSketchCached` passes a client made by `createSupabaseServerClient` to `getSketch` (`src/supabase/sketch-crud/getSketch.ts`).
 - `getSketch` is server only (`server-only`).
   It gets `id`, `title`, `description`, `width`, `height`, `created_at` and `updated_at`, and also `canvas_json`, `cell_size` and `frame_id`, which are needed to restore the canvas.
   It also gets `fabric_version`, but the app does not use it.
@@ -128,6 +129,58 @@ See [Overview](./overview.en.md) for details.
   So `NavigationMenu` stays on an error.
 - There is no `global-error.tsx`.
   An error in the root `layout.tsx` shows the default Next.js screen.
+
+## Title and metadata
+
+`src/app/layout.tsx` defines the metadata shared by the whole site.
+Each page specifies only `title`.
+
+### Shared metadata (`src/app/layout.tsx`)
+
+| Item             | Value                                                                                                                       |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `metadataBase`   | The value of `getSiteUrl()` (`src/utils/getSiteUrl.ts`) as a `URL`. See [Environment variables](../setup/environment.en.md) |
+| `title.default`  | `Ultra-Simple-Wireframer`. It is used when a page does not specify `title`                                                  |
+| `title.template` | `%s \| Ultra-Simple-Wireframer`. When a page specifies `title`, the value goes into `%s`                                    |
+| `description`    | "思いついたアイデアをその場でスケッチして、そのままLLMに渡せるキャンバスです"                                               |
+| `openGraph`      | `type` is `website`, `siteName`, `locale` is `ja_JP`, `title` and `description`. `url` and `images` are not specified       |
+
+- `<html lang>` is fixed to `ja`.
+- The site name and the description are constants in `layout.tsx` (`SITE_NAME` and `SITE_DESCRIPTION`).
+
+### Title of each page
+
+| Path             | How it is specified | title                                            |
+| ---------------- | ------------------- | ------------------------------------------------ |
+| `/`              | Not specified       | `Ultra-Simple-Wireframer` (`default`)            |
+| `/signin`        | `metadata`          | `サインイン`                                     |
+| `/signup`        | `metadata`          | `アカウント登録`                                 |
+| `/sketches`      | `metadata`          | `スケッチ`                                       |
+| `/sketches/[id]` | `generateMetadata`  | The `title` of the sketch (see the next section) |
+
+- `not-found.tsx` and `error.tsx` do not specify `title`.
+- By `title.template`, `/signin` is shown as `サインイン | Ultra-Simple-Wireframer`.
+
+### `generateMetadata` of `/sketches/[id]`
+
+`generateMetadata` in `src/app/sketches/[id]/page.tsx` only takes out `id` and passes it to `generateSketchMetadata` in `src/sketch-detail/`.
+
+- `generateSketchMetadata` returns the `title` of the sketch got by `getSketchCached`.
+- `getSketchCached` is `getSketch` wrapped with `cache()`.
+  `SketchDetail` also uses it.
+  The purpose is to share the result in the same request.
+- `cache()` compares the arguments by reference, so the only argument of `getSketchCached` is `id` (a string).
+  The client is created inside the function.
+- `generateSketchMetadata` never throws.
+  `SketchDetail` is in charge of the error display and the 404 page.
+- Only `SketchDetail` checks whether `id` is a uuid.
+
+| State                                             | Returned value                 |
+| ------------------------------------------------- | ------------------------------ |
+| Success, and `title` is not blank                 | `{ title }`                    |
+| Success, and `title` is empty or only spaces      | `{}` (`title.default` is used) |
+| `null` (nonexistent, or a sketch of another user) | `{}`                           |
+| Error                                             | `{}`                           |
 
 ## Web Analytics
 
