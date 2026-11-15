@@ -2,13 +2,13 @@
 
 ## Routes
 
-| Path             | Content                                                                          |
-| ---------------- | -------------------------------------------------------------------------------- |
-| `/`              | The landing page. The buttons change with the auth state                         |
-| `/signin`        | Sign-in. Renders `AuthPage` from `src/auth-form/`                                |
-| `/signup`        | Registration. For a guest, it registers the email address                        |
-| `/sketches`      | The sketch list. Has a `loading.tsx`                                             |
-| `/sketches/[id]` | The sketch page. The link target of each item in the list. Has a `not-found.tsx` |
+| Path             | Content                                                                                              |
+| ---------------- | ---------------------------------------------------------------------------------------------------- |
+| `/`              | The landing page. The buttons change with the auth state                                             |
+| `/signin`        | Sign-in. Renders `AuthPage` from `src/auth-form/`                                                    |
+| `/signup`        | Registration. For a guest, it registers the email address                                            |
+| `/sketches`      | The sketch list. Shows a skeleton by `Suspense` while fetching                                       |
+| `/sketches/[id]` | The sketch page. The link target of each item in the list. Has a `loading.tsx` and a `not-found.tsx` |
 
 See [Authentication](./auth.en.md) for the redirects by path.
 See [Authentication](./auth.en.md) also for the behavior of `/signin` and `/signup`.
@@ -31,6 +31,8 @@ It is always shown, whether the user is signed out or signed in.
 ## Sketch list (`/sketches`)
 
 `src/app/sketches/page.tsx` renders `SketchList` from `src/sketch-list/`.
+It shows the heading (`<h1>`) at once, and wraps only `SketchList`, which fetches the data, in `Suspense`.
+The `fallback` is `SketchListSkeleton` from `src/sketch-list/`.
 See [Overview](./overview.en.md) for the components.
 
 `src/app/sketches/layout.tsx` renders `NavigationMenu` on every page under `/sketches` (including `/sketches/[id]`).
@@ -53,12 +55,12 @@ See [Toolbars](./toolbar.en.md) for details.
 
 ### Display
 
-| State   | Display                                                                                         |
-| ------- | ----------------------------------------------------------------------------------------------- |
-| Loading | "読み込み中…" from `loading.tsx`                                                                |
-| Error   | "スケッチ一覧の取得に失敗しました。" with `role="alert"`                                        |
-| No rows | "スケッチがまだありません。"                                                                    |
-| 1+ rows | Each item links to `/sketches/{id}`. Shows `title`, `description` (if any) and the updated time |
+| State   | Display                                                                                                 |
+| ------- | ------------------------------------------------------------------------------------------------------- |
+| Loading | `SketchListSkeleton`. It has no text, and shows 3 rows of bars that are the same size as the real items |
+| Error   | "スケッチ一覧の取得に失敗しました。" with `role="alert"`                                                |
+| No rows | "スケッチがまだありません。"                                                                            |
+| 1+ rows | Each item links to `/sketches/{id}`. Shows `title`, `description` (if any) and the updated time         |
 
 - The updated time is shown by `LocalTime` (`src/design-system/local-time.tsx`). It is not shown when `updated_at` is `null`.
 
@@ -100,6 +102,7 @@ The new-sketch button is rendered by `NewSketchIconButton` in `NavigationMenu`, 
 
 | State                         | Display                                                                                                            |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Loading                       | `SketchDetailSkeleton` from `loading.tsx`. Shows the paper of the canvas and the frames of the 3 toolbars          |
 | `id` is not a uuid, or `null` | `notFound()`. `not-found.tsx` shows "スケッチが見つかりません。" and a link to the list                            |
 | Error                         | "スケッチの取得に失敗しました。" with `role="alert"`                                                               |
 | Success                       | Shows `TitleToolbar` (inputs for `title` and `description`, `width × height`, the updated time) and `SketchCanvas` |
