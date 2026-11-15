@@ -1,6 +1,7 @@
+import { Suspense } from "react";
 import { cn } from "cn";
 import { navigationMenuInsetClassName } from "@/design-system/constants";
-import { SketchList } from "@/sketch-list";
+import { SketchList, SketchListSkeleton } from "@/sketch-list";
 
 const page = () => {
   return (
@@ -11,7 +12,9 @@ const page = () => {
       )}
     >
       <h1 className="text-headline-md">スケッチ</h1>
-      <SketchList />
+      <Suspense fallback={<SketchListSkeleton />}>
+        <SketchList />
+      </Suspense>
     </div>
   );
 };
