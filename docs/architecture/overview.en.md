@@ -77,10 +77,12 @@ Details of `useFabricCanvas`:
 
 ## Sketch list (`src/sketch-list/`)
 
-| File              | Role                                                    |
-| ----------------- | ------------------------------------------------------- |
-| `sketch-list.tsx` | Server Component. Renders the list from `getSketchList` |
-| `index.ts`        | Exports `SketchList`                                    |
+| File                       | Role                                                                                                                 |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `sketch-list.tsx`          | Server Component. Renders the list from `getSketchList`                                                              |
+| `sketch-list-skeleton.tsx` | The skeleton shown while fetching. It has no text, and shows 3 rows of bars that are the same size as the real items |
+| `constants.ts`             | The classes of the list and the item frame. Shared by the real list and the skeleton. Not exported                   |
+| `index.ts`                 | Exports `SketchList` and `SketchListSkeleton`                                                                        |
 
 ## Date and time (`src/design-system/local-time.tsx`)
 
@@ -138,21 +140,22 @@ See [Authentication](./auth.en.md) for details.
 
 ## Sketch page (`src/sketch-detail/`)
 
-| File                | Role                                                                                                                                                                      |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sketch-detail.tsx` | Server Component. Passes the sketch got by `getSketch` to `SketchEditor`                                                                                                  |
-| `sketch-editor.tsx` | Client Component. Holds the title and description that `TitleToolbar` has validated, and passes them to `SketchCanvas`                                                    |
-| `sketch-canvas.tsx` | Client Component. Handles the canvas, the control toolbar (`ControlToolbar`) and auto-save                                                                                |
-| `title-toolbar/`    | The title toolbar (`TitleToolbar`). Shows the inputs for the title and description, the size and the updated time. It also has the validation (`validateSketchMeta`)      |
-| `control-toolbar/`  | The frame of the control toolbar (`ControlToolbar`), the zoom controls (`ZoomControls` in `zoom-controls/`), and the buttons to add and delete shapes (`ShapeNavigation`) |
-| `handoff-toolbar/`  | The handoff toolbar (`HandoffToolbar`). Has the buttons to copy or download the image of the sketch                                                                       |
-| `canvas/`           | Creating, disposing and loading the fabric canvas (see the section above)                                                                                                 |
-| `selection/`        | Deleting the selected shapes (see the section above)                                                                                                                      |
-| `shapes/`           | Creating shapes (see the section above)                                                                                                                                   |
-| `history/`          | Undo / redo (see the section above)                                                                                                                                       |
-| `viewport/`         | Fixed frame, pan and zoom (see the section above and [Fixed frame, pan and zoom](./viewport.en.md))                                                                       |
-| `save/`             | Hooks and functions for saving to the DB (see [Saving sketches](./save.en.md))                                                                                            |
-| `index.ts`          | Exports only `SketchDetail`                                                                                                                                               |
+| File                         | Role                                                                                                                                                                      |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sketch-detail.tsx`          | Server Component. Passes the sketch got by `getSketch` to `SketchEditor`                                                                                                  |
+| `sketch-editor.tsx`          | Client Component. Holds the title and description that `TitleToolbar` has validated, and passes them to `SketchCanvas`                                                    |
+| `sketch-detail-skeleton.tsx` | The skeleton shown while fetching. It puts the paper of the canvas and the frames of the 3 toolbars at the same positions as the real ones                                |
+| `sketch-canvas.tsx`          | Client Component. Handles the canvas, the control toolbar (`ControlToolbar`) and auto-save                                                                                |
+| `title-toolbar/`             | The title toolbar (`TitleToolbar`). Shows the inputs for the title and description, the size and the updated time. It also has the validation (`validateSketchMeta`)      |
+| `control-toolbar/`           | The frame of the control toolbar (`ControlToolbar`), the zoom controls (`ZoomControls` in `zoom-controls/`), and the buttons to add and delete shapes (`ShapeNavigation`) |
+| `handoff-toolbar/`           | The handoff toolbar (`HandoffToolbar`). Has the buttons to copy or download the image of the sketch                                                                       |
+| `canvas/`                    | Creating, disposing and loading the fabric canvas (see the section above)                                                                                                 |
+| `selection/`                 | Deleting the selected shapes (see the section above)                                                                                                                      |
+| `shapes/`                    | Creating shapes (see the section above)                                                                                                                                   |
+| `history/`                   | Undo / redo (see the section above)                                                                                                                                       |
+| `viewport/`                  | Fixed frame, pan and zoom (see the section above and [Fixed frame, pan and zoom](./viewport.en.md))                                                                       |
+| `save/`                      | Hooks and functions for saving to the DB (see [Saving sketches](./save.en.md))                                                                                            |
+| `index.ts`                   | Exports `SketchDetail` and `SketchDetailSkeleton`                                                                                                                         |
 
 Details of `SketchCanvas`:
 
