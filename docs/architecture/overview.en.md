@@ -144,7 +144,7 @@ See [Authentication](./auth.en.md) for details.
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `sketch-detail.tsx`          | Server Component. Passes the sketch got by `getSketch` to `SketchEditor`                                                                                                  |
 | `sketch-editor.tsx`          | Client Component. Holds the title and description that `TitleToolbar` has validated, and passes them to `SketchCanvas`                                                    |
-| `sketch-detail-skeleton.tsx` | The skeleton shown while fetching. It puts the paper of the canvas and the frames of the 3 toolbars at the same positions as the real ones                                |
+| `sketch-detail-skeleton.tsx` | The skeleton shown while fetching. It only puts the skeletons of the toolbars (`*-skeleton.tsx` in each directory) on the paper of the canvas                             |
 | `sketch-canvas.tsx`          | Client Component. Handles the canvas, the control toolbar (`ControlToolbar`) and auto-save                                                                                |
 | `title-toolbar/`             | The title toolbar (`TitleToolbar`). Shows the inputs for the title and description, the size and the updated time. It also has the validation (`validateSketchMeta`)      |
 | `control-toolbar/`           | The frame of the control toolbar (`ControlToolbar`), the zoom controls (`ZoomControls` in `zoom-controls/`), and the buttons to add and delete shapes (`ShapeNavigation`) |

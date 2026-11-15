@@ -121,7 +121,7 @@ The items are defined in `menuItems`, and an item is shown only when the auth st
 
 `TitleToolbar` (`src/sketch-detail/title-toolbar/title-toolbar.tsx`) is a Client Component.
 It floats over the canvas at the top center.
-`index.ts` exports only `TitleToolbar`.
+`index.ts` exports `TitleToolbar` and `TitleToolbarSkeleton`.
 
 - `title` and `description` are always shown as inputs.
   The inputs have no border until they are focused.
@@ -130,15 +130,17 @@ It floats over the canvas at the top center.
 - See [Saving sketches](./save.en.md) for the validation and the saving of the input.
 - It has no icon buttons, so it has no tooltip.
 - The classes of the position and the width are in `titleToolbarPositionClassName` in `title-toolbar/constants.ts`.
-  They are shared with `SketchDetailSkeleton` (`src/sketch-detail/sketch-detail-skeleton.tsx`), which is shown while fetching.
+  They are shared with the skeleton shown while fetching (`TitleToolbarSkeleton` in `title-toolbar-skeleton.tsx`).
 
 ## Control toolbar
 
 `ControlToolbar` (`src/sketch-detail/control-toolbar/control-toolbar.tsx`) floats over the canvas, centered and slightly lifted from the bottom edge of the screen.
 The toolbar has its own frame and position (`absolute`), and receives its content as `children`.
-`index.ts` exports `ControlToolbar` and `ZoomControls`.
+`index.ts` exports `ControlToolbar`, `ZoomControls`, and their skeletons.
 The tooltip opens above the item (`TOOLTIP_SIDE` in `control-toolbar/constants.ts` is `"top"`).
-The classes of the position are in `controlToolbarPositionClassName` in the same `constants.ts`, and are shared with `SketchDetailSkeleton`.
+The classes of the position are in `controlToolbarPositionClassName` in the same `constants.ts`, and are shared with `ControlToolbarSkeleton`.
+The skeleton shown while fetching has the same structure as the real one: `ControlToolbarSkeleton`, `ShapeNavigationSkeleton`, and `ZoomControlsSkeleton` each own their part.
+When you change the number of buttons, change the skeleton in the same directory too.
 
 The content is the shape navigation (`ShapeNavigation`) and the zoom controls (`ZoomControls`).
 
@@ -167,7 +169,7 @@ It has the buttons to hand the sketch over to LLMs and others.
 It floats over the canvas, is fixed (`absolute`) at `right-4` from the right edge of the screen, and is vertically centered.
 It is always shown and has no toggle.
 Its buttons are lined up vertically.
-`index.ts` exports only `HandoffToolbar`.
+`index.ts` exports `HandoffToolbar` and `HandoffToolbarSkeleton`.
 
 | Button   | Component             | Icon         | Tooltip            |
 | -------- | --------------------- | ------------ | ------------------ |
@@ -177,7 +179,8 @@ Its buttons are lined up vertically.
 Both are shown with `IconButton`.
 They are disabled until the canvas is loaded (`isLoaded` is `true`).
 The tooltip opens on the left of the item (`TOOLTIP_SIDE` in `handoff-toolbar/constants.ts` is `"left"`).
-The classes of the position are in `handoffToolbarPositionClassName` in the same `constants.ts`, and are shared with `SketchDetailSkeleton`.
+The classes of the position are in `handoffToolbarPositionClassName` in the same `constants.ts`, and are shared with the skeleton shown while fetching (`HandoffToolbarSkeleton` in `handoff-toolbar-skeleton.tsx`).
+When you add or remove a button, change the number of boxes in `HandoffToolbarSkeleton` too.
 
 ### How the PNG is made
 
