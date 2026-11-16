@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
-import { z } from "zod";
 import { getSketchCached } from "@/sketch-detail/getSketchCached";
+import { isSketchId } from "@/sketch-detail/isSketchId";
 import { SketchEditor } from "@/sketch-detail/sketch-editor";
 import { SketchError } from "@/sketch-detail/sketch-error";
 
 const SketchDetail = async ({ id }: { id: string }) => {
-  if (!z.uuid().safeParse(id).success) notFound();
+  if (!isSketchId(id)) notFound();
 
   const result = await getSketchCached(id);
 

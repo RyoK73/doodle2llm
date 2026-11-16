@@ -1,4 +1,5 @@
 import { generateSketchMetadata } from "@/sketch-detail/generateSketchMetadata";
+import { isSketchId } from "@/sketch-detail/isSketchId";
 import { getSketch } from "@/supabase/sketch-crud/getSketch";
 import { createSupabaseServerClient } from "@/supabase/utils/serverClient";
 
@@ -8,6 +9,7 @@ vi.mock("@/supabase/utils/serverClient", () => ({
   createSupabaseServerClient: vi.fn(),
 }));
 vi.mock("@/supabase/sketch-crud/getSketch", () => ({ getSketch: vi.fn() }));
+vi.mock("@/sketch-detail/isSketchId", () => ({ isSketchId: vi.fn() }));
 
 const createSketch = (title: string) => ({
   id: validId,
@@ -26,9 +28,20 @@ const createSketch = (title: string) => ({
 describe("generateSketchMetadata", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(isSketchId).mockReturnValue(true);
     vi.mocked(createSupabaseServerClient).mockResolvedValue(
       {} as Awaited<ReturnType<typeof createSupabaseServerClient>>,
     );
+  });
+
+  describe("when isSketchId returns false", () => {
+    test("should return no title without calling getSketch", async () => {
+      vi.mocked(isSketchId).mockReturnValue(false);
+
+      expect(await generateSketchMetadata(validId)).toEqual({});
+      expect(isSketchId).toHaveBeenCalledWith(validId);
+      expect(getSketch).not.toHaveBeenCalled();
+    });
   });
 
   describe("when getSketch returns ok: true", () => {

@@ -173,10 +173,12 @@ Each page specifies only `title`.
   The client is created inside the function.
 - `generateSketchMetadata` never throws.
   `SketchDetail` is in charge of the error display and the 404 page.
-- Only `SketchDetail` checks whether `id` is a uuid.
+- `SketchDetail` and `generateSketchMetadata` both check whether `id` is a uuid with `isSketchId` (`src/sketch-detail/isSketchId.ts`).
+- `generateSketchMetadata` does not request the database when `id` is not a uuid.
 
 | State                                             | Returned value                 |
 | ------------------------------------------------- | ------------------------------ |
+| `id` is not a uuid                                | `{}`                           |
 | Success, and `title` is not blank                 | `{ title }`                    |
 | Success, and `title` is empty or only spaces      | `{}` (`title.default` is used) |
 | `null` (nonexistent, or a sketch of another user) | `{}`                           |

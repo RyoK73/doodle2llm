@@ -173,10 +173,12 @@
   クライアントは、関数の中で作ります。
 - `generateSketchMetadata`は、エラーを投げません。
   画面のエラー表示と404は、`SketchDetail`が担当します。
-- `id`がuuidかどうかは、`SketchDetail`だけが判定します。
+- `id`がuuidかどうかは、`SketchDetail`と`generateSketchMetadata`が、どちらも`isSketchId`（`src/sketch-detail/isSketchId.ts`）で判定します。
+- `generateSketchMetadata`は、`id`がuuidでない場合、データベースにリクエストしません。
 
 | 状態                                     | 返す値                          |
 | ---------------------------------------- | ------------------------------- |
+| `id`がuuidでない                         | `{}`                            |
 | 取得成功、`title`が空白でない            | `{ title }`                     |
 | 取得成功、`title`が空文字か空白のみ      | `{}`(`title.default`になります) |
 | `null`(存在しない、または他人のスケッチ) | `{}`                            |
