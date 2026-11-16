@@ -26,25 +26,26 @@ On saving, the version at that time is recorded in the DB as `fabric_version`.
 The codebase is split by what it does (vertical).
 See [Directory structure](../rules/directory-structure.en.md) for the rule.
 
-| Directory                       | Role                                                          |
-| ------------------------------- | ------------------------------------------------------------- |
-| `src/app/`                      | Routing only                                                  |
-| `src/proxy.ts`                  | Next.js proxy. Refreshes the auth session on each request     |
-| `src/instrumentation-client.ts` | Client-side setup. Registers the paths that BotID protects    |
-| `src/analytics/`                | Web Analytics (with a rule to exclude some pages)             |
-| `src/auth-form/`                | The form for sign-in and guest registration                   |
-| `src/landing-page/`             | Showing the landing page (buttons by auth state)              |
-| `src/navigation-menu/`          | The navigation menu (items by auth state)                     |
-| `src/new-sketch/`               | Creating a sketch (button and Server Action)                  |
-| `src/sketch-detail/`            | The sketch page (showing, drawing and saving to the DB)       |
-| `src/design-system/`            | Generic UI parts                                              |
-| `src/sketch-list/`              | Showing the sketch list (Server and Client Components)        |
-| `src/sitemap/`                  | Building the sitemap entries (`buildSitemap`)                 |
-| `src/error-pages/`              | Shared parts for the 404 and error pages                      |
-| `src/supabase/`                 | Supabase clients, auth, CRUD and DB tests                     |
-| `src/utils/`                    | Shared types and the function for the site URL (`getSiteUrl`) |
-| `src/dev-scripts/`              | Scripts for development                                       |
-| `src/test/`                     | Pure helpers for tests                                        |
+| Directory                       | Role                                                             |
+| ------------------------------- | ---------------------------------------------------------------- |
+| `src/app/`                      | Routing only                                                     |
+| `src/proxy.ts`                  | Next.js proxy. Refreshes the auth session on each request        |
+| `src/instrumentation-client.ts` | Client-side setup. Registers the paths that BotID protects       |
+| `src/analytics/`                | Web Analytics (with a rule to exclude some pages)                |
+| `src/auth-form/`                | The form for sign-in and guest registration                      |
+| `src/landing-page/`             | Showing the landing page (buttons by auth state)                 |
+| `src/navigation-menu/`          | The navigation menu (items by auth state)                        |
+| `src/new-sketch/`               | Creating a sketch (button and Server Action)                     |
+| `src/sketch-detail/`            | The sketch page (showing, drawing and saving to the DB)          |
+| `src/design-system/`            | Generic UI parts                                                 |
+| `src/sketch-list/`              | Showing the sketch list (Server and Client Components)           |
+| `src/sitemap/`                  | Building the sitemap entries (`buildSitemap`)                    |
+| `src/error-pages/`              | Shared parts for the 404 and error pages                         |
+| `src/supabase/`                 | Supabase clients, auth, CRUD and DB tests                        |
+| `src/utils/`                    | Shared types and the function for the site URL (`getSiteUrl`)    |
+| `src/dev-scripts/`              | Scripts for development                                          |
+| `src/test/`                     | Pure helpers for tests                                           |
+| `assets/`                       | Sources of images before conversion (the SVG of the share image) |
 
 ## Drawing (`canvas/`, `shapes/`, `selection/`, `history/` and `viewport/` in `src/sketch-detail/`)
 
@@ -175,6 +176,30 @@ Details of `SketchCanvas`:
 - When the loading fails, or `canvas_json` is not an object, it shows neither the canvas nor the buttons.
   It shows a message with `role="alert"` and a link to the list.
   This keeps auto-save from overwriting the content that could not be loaded.
+
+## Share image
+
+The image shown when the site is shared on social media is a static PNG (`src/app/opengraph-image.png`, 1200x630).
+The SVG before conversion is `assets/opengraph-image.svg`.
+It is not generated dynamically (`ImageResponse`) because one image shared by all pages is enough.
+It also avoids handling a Japanese font at runtime, and the hand-drawn look can be crafted in the SVG.
+See [Routing](./routing.en.md) for the metadata that is output.
+
+To change the content, edit the SVG and make the PNG again.
+
+1. Get the TTF of Zen Kurenaido (`Regular`) from Google Fonts (`ofl/zenkurenaido/` in `github.com/google/fonts`).
+   Do not commit it to the repository.
+2. Let fontconfig find the TTF, and convert with `rsvg-convert`.
+
+```bash
+FONTCONFIG_FILE=<a config file that points to the directory of the TTF> \
+  rsvg-convert -w 1200 -h 630 assets/opengraph-image.svg -o src/app/opengraph-image.png
+```
+
+- The texts in the SVG are the same values as `SITE_NAME` and `SITE_DESCRIPTION` in `layout.tsx`.
+  When you change one, change the other too.
+- The icon is an enlarged drawing of `src/app/icon.svg`.
+- The colors are the values of the tokens in `DESIGN.md`.
 
 ## Next
 

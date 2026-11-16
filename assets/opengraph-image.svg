@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <!-- 64px grid. A vertical line passes through the horizontal center (x = 600), like the page background. -->
+    <pattern id="grid" x="24" y="55" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M0 0 H64 M0 0 V64" fill="none" stroke="#E0DED8" stroke-width="2" />
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="#F8F7F3" />
+  <rect width="1200" height="630" fill="url(#grid)" />
+
+  <!-- Hand-drawn frame (brush-a): filled with card, tilted by 1 degree -->
+  <g transform="rotate(-1 600 315)">
+    <path
+      d="M170 100 L1085 96 Q1104 96 1104 118 L1099 490 Q1099 536 1040 534 L118 532 Q96 532 96 510 L92 170 Q92 104 170 100 Z"
+      fill="#FDFCFA"
+      stroke="#1E1A16"
+      stroke-width="4"
+      stroke-linejoin="round"
+    />
+
+    <!-- Paint marks on the corners -->
+    <circle cx="96" cy="100" r="26" fill="#2F6DD3" fill-opacity="0.7" />
+    <circle cx="1104" cy="96" r="26" fill="#4AC06C" fill-opacity="0.7" />
+    <circle cx="94" cy="532" r="26" fill="#E6443A" fill-opacity="0.7" />
+    <circle cx="1100" cy="534" r="26" fill="#F9D544" fill-opacity="0.7" />
+  </g>
+
+  <!-- Icon: the same drawing as src/app/icon.svg, enlarged by 8.5 -->
+  <g transform="translate(150 180) scale(8.5)">
+    <circle cx="16" cy="16" r="15.5" fill="#f3f4ee" stroke="#c9cbc3" stroke-width="1" />
+    <path
+      d="M8 8.2 L24 7.8 L24.2 24"
+      fill="none"
+      stroke="#2b2323"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M8 8 L7.8 24 L13 24"
+      fill="none"
+      stroke="#2b2323"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <circle cx="8" cy="8" r="3.2" fill="#3b6fd4" />
+    <circle cx="24" cy="8" r="3.2" fill="#4aa27a" />
+    <circle cx="8" cy="24" r="3.2" fill="#e05a33" />
+    <circle cx="24" cy="24" r="3.2" fill="#f2c230" />
+    <g transform="translate(18 17) rotate(40)">
+      <path
+        d="M-2.2 4.5 V-5 A2.2 2.2 0 0 1 2.2 -5 V4.5 L0 8 Z"
+        fill="#ffffff"
+        stroke="#2b2323"
+        stroke-width="1.2"
+        stroke-linejoin="round"
+      />
+      <path d="M-2.2 -3 H2.2" stroke="#2b2323" stroke-width="1" />
+    </g>
+  </g>
+
+  <!-- Site name and description (Zen Kurenaido, text color is ink) -->
+  <g
+    font-family="Zen Kurenaido"
+    fill="#1E1A16"
+    stroke="#1E1A16"
+    stroke-width="0.8"
+  >
+    <!-- Highlighter under the name (paint-yellow) -->
+    <rect x="452" y="212" width="525" height="22" fill="#F9D544" fill-opacity="0.7" stroke="none" />
+    <text x="450" y="232" font-size="50" stroke-width="1.2">Ultra-Simple-Wireframer</text>
+
+    <text x="452" y="318" font-size="34">思いついたアイデアを</text>
+    <text x="452" y="372" font-size="34">その場でスケッチして、</text>
+    <text x="452" y="426" font-size="34">そのままLLMに渡せるキャンバスです</text>
+  </g>
+</svg>
