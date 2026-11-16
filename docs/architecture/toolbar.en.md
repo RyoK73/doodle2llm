@@ -5,14 +5,14 @@
 There are four UIs that float over the screen.
 This document first describes what the four have in common, and then describes each one.
 
-| Name            | Component        | Position                                                            | Page                          |
-| --------------- | ---------------- | ------------------------------------------------------------------- | ----------------------------- |
-| Navigation menu | `NavigationMenu` | `left-4` from the left edge, vertically centered (`fixed`)          | `/sketches`, `/sketches/[id]` |
-| Title toolbar   | `TitleToolbar`   | `top-4` from the top edge, horizontally centered (`absolute`)       | `/sketches/[id]`              |
-| Control toolbar | `ControlToolbar` | `bottom-4` from the bottom edge, horizontally centered (`absolute`) | `/sketches/[id]`              |
-| Handoff toolbar | `HandoffToolbar` | `right-4` from the right edge, vertically centered (`absolute`)     | `/sketches/[id]`              |
+| Name            | Component        | Position                                                            | Page                                                |
+| --------------- | ---------------- | ------------------------------------------------------------------- | --------------------------------------------------- |
+| Navigation menu | `NavigationMenu` | `left-4` from the left edge, vertically centered (`fixed`)          | `/sketches`, `/sketches/[id]`, `/signin`, `/signup` |
+| Title toolbar   | `TitleToolbar`   | `top-4` from the top edge, horizontally centered (`absolute`)       | `/sketches/[id]`                                    |
+| Control toolbar | `ControlToolbar` | `bottom-4` from the bottom edge, horizontally centered (`absolute`) | `/sketches/[id]`                                    |
+| Handoff toolbar | `HandoffToolbar` | `right-4` from the right edge, vertically centered (`absolute`)     | `/sketches/[id]`                                    |
 
-`src/app/sketches/layout.tsx` renders the navigation menu.
+`src/app/sketches/layout.tsx` and `src/app/(auth)/layout.tsx` render the navigation menu.
 `SketchCanvas` (`src/sketch-detail/sketch-canvas.tsx`) renders the other three.
 See [Overview](./overview.en.md) for the details of `SketchCanvas`.
 
@@ -58,7 +58,8 @@ See [Overview](./overview.en.md) for the details of `SketchCanvas`.
 ## Navigation menu
 
 `NavigationMenu` (`src/navigation-menu/navigation-menu.tsx`) is a Server Component.
-`src/app/sketches/layout.tsx` renders it, so it appears on both `/sketches` and `/sketches/[id]`.
+`src/app/sketches/layout.tsx` renders it under `/sketches`, and `src/app/(auth)/layout.tsx` renders it on `/signin` and `/signup`.
+So it appears on `/sketches`, `/sketches/[id]`, `/signin` and `/signup`.
 It is fixed (`fixed`) at `left-4` from the left edge of the screen and vertically centered.
 It does not take any width from the content, so a page that must not go under the menu uses `navigationMenuInsetClassName` (`src/design-system/constants.ts`) for its left padding.
 `/sketches` uses this padding.
@@ -70,17 +71,17 @@ The tooltip opens on the right of the item (`TOOLTIP_SIDE` is `"right"`).
 ### Visibility
 
 `NavigationMenu` passes a client made by `createSupabaseServerClient` to `getAuthState` to get the auth state.
-When the state is `signedOut`, it shows no menu at all (it returns `null`).
 The items are defined in `menuItems`, and an item is shown only when the auth state is in its `visibleFor`.
+`visibleFor` can hold any of `signedOut`, `guest` and `registered`.
 
-| Item             | Component             | `guest` | `registered` | Status      |
-| ---------------- | --------------------- | ------- | ------------ | ----------- |
-| Sketch list      | `SketchListLink`      | Shown   | Shown        | Implemented |
-| New sketch       | `NewSketchIconButton` | Shown   | Shown        | Implemented |
-| Theme toggle     | `ThemeToggleButton`   | Shown   | Shown        | Implemented |
-| Register account | `SignUpLink`          | Shown   | Hidden       | Implemented |
-| Sign in          | `SignInLink`          | Shown   | Hidden       | Implemented |
-| Sign out         | `SignOutButton`       | Hidden  | Shown        | Implemented |
+| Item             | Component             | `signedOut` | `guest` | `registered` | Status      |
+| ---------------- | --------------------- | ----------- | ------- | ------------ | ----------- |
+| Sketch list      | `SketchListLink`      | Hidden      | Shown   | Shown        | Implemented |
+| New sketch       | `NewSketchIconButton` | Hidden      | Shown   | Shown        | Implemented |
+| Theme toggle     | `ThemeToggleButton`   | Shown       | Shown   | Shown        | Implemented |
+| Register account | `SignUpLink`          | Shown       | Shown   | Hidden       | Implemented |
+| Sign in          | `SignInLink`          | Shown       | Shown   | Hidden       | Implemented |
+| Sign out         | `SignOutButton`       | Hidden      | Hidden  | Shown        | Implemented |
 
 ### Files
 

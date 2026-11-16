@@ -65,13 +65,30 @@ it("should not show SignUpLink and SignInLink for the registered user", async ()
   expect(screen.queryByRole("link", { name: "アカウント登録" })).toBeNull();
   expect(screen.queryByRole("link", { name: "サインイン" })).toBeNull();
 });
-it("should show nothing for the signout user", async () => {
+it("should show only ThemeToggleButton, SignUpLink, SignInLink in this order for the signout user", async () => {
   vi.mocked(getAuthState).mockResolvedValue("signedOut");
   render(await NavigationMenu());
-  const navigation = screen.queryByRole("navigation", {
+  const navigation = screen.getByRole("navigation", {
     name: "ナビゲーションメニュー",
   });
-  expect(navigation).toBeNull();
+  const items = within(navigation).getAllByRole("listitem");
+  expect(items).toHaveLength(3);
+  expect(
+    within(items[0]).getByRole("button", { name: "テーマ切り替え" }),
+  ).toBeInTheDocument();
+  expect(
+    within(items[1]).getByRole("link", { name: "アカウント登録" }),
+  ).toBeInTheDocument();
+  expect(
+    within(items[2]).getByRole("link", { name: "サインイン" }),
+  ).toBeInTheDocument();
+});
+it("should not show SketchListLink, NewSketchButton, SignOutButton for the signout user", async () => {
+  vi.mocked(getAuthState).mockResolvedValue("signedOut");
+  render(await NavigationMenu());
+  expect(screen.queryByRole("link", { name: "スケッチ一覧へ" })).toBeNull();
+  expect(screen.queryByRole("button", { name: "新規スケッチ作成" })).toBeNull();
+  expect(screen.queryByRole("button", { name: "サインアウト" })).toBeNull();
 });
 it("should throw an error when an error occurs", async () => {
   const error = new Error("Test Error");
