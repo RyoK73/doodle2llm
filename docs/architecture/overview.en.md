@@ -199,7 +199,7 @@ FONTCONFIG_FILE=<a config file that points to the directory of the TTF> \
 - The texts in the SVG are the same values as `SITE_NAME` and `SITE_DESCRIPTION` in `layout.tsx`.
   When you change one, change the other too.
 - The icon is an enlarged drawing of `src/app/icon.svg`.
-- The colors are the values of the tokens in `DESIGN.md`.
+- The colors other than the icon are the values of the tokens in `DESIGN.md`.
 
 ## Next
 
