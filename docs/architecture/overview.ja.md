@@ -199,7 +199,7 @@ FONTCONFIG_FILE=<TTFのディレクトリを指定した設定ファイル> \
 - SVGの文言は、`layout.tsx`の`SITE_NAME`、`SITE_DESCRIPTION`と同じ値です。
   どちらかを変えたら、もう一方も合わせます。
 - アイコンの図柄は、`src/app/icon.svg`を拡大したものです。
-- 色は、`DESIGN.md`のトークンの値です。
+- アイコン以外の色は、`DESIGN.md`のトークンの値です。
 
 ## 次のステップ
 
