@@ -171,8 +171,7 @@ Each page specifies only `title`.
   The purpose is to share the result in the same request.
 - `cache()` compares the arguments by reference, so the only argument of `getSketchCached` is `id` (a string).
   The client is created inside the function.
-- `generateSketchMetadata` never throws.
-  `SketchDetail` is in charge of the error display and the 404 page.
+- `SketchDetail` is in charge of the error display and the 404 page.
 - `SketchDetail` and `generateSketchMetadata` both check whether `id` is a uuid with `isSketchId` (`src/sketch-detail/isSketchId.ts`).
 - `generateSketchMetadata` does not request the database when `id` is not a uuid.
 
