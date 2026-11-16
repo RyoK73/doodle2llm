@@ -171,8 +171,7 @@
   同じリクエストの中で、取得結果を共有するためです。
 - `cache()`は引数を参照で比較するので、`getSketchCached`の引数は`id`(文字列)だけにしています。
   クライアントは、関数の中で作ります。
-- `generateSketchMetadata`は、エラーを投げません。
-  画面のエラー表示と404は、`SketchDetail`が担当します。
+- 画面のエラー表示と404は、`SketchDetail`が担当します。
 - `id`がuuidかどうかは、`SketchDetail`と`generateSketchMetadata`が、どちらも`isSketchId`（`src/sketch-detail/isSketchId.ts`）で判定します。
 - `generateSketchMetadata`は、`id`がuuidでない場合、データベースにリクエストしません。
 
