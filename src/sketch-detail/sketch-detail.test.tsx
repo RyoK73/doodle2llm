@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { notFound } from "next/navigation";
 import { SketchDetail } from "@/sketch-detail/sketch-detail";
+import { isSketchId } from "@/sketch-detail/isSketchId";
 import { SketchCanvas } from "@/sketch-detail/sketch-canvas";
 import { TitleToolbar } from "@/sketch-detail/title-toolbar";
 import { getSketch } from "@/supabase/sketch-crud/getSketch";
@@ -17,6 +18,7 @@ vi.mock("@/supabase/utils/serverClient", () => ({
   createSupabaseServerClient: vi.fn(),
 }));
 vi.mock("@/supabase/sketch-crud/getSketch", () => ({ getSketch: vi.fn() }));
+vi.mock("@/sketch-detail/isSketchId", () => ({ isSketchId: vi.fn() }));
 vi.mock("@/sketch-detail/sketch-canvas", () => ({
   SketchCanvas: vi.fn(() => <div data-testid="sketch-canvas" />),
 }));
@@ -27,6 +29,7 @@ vi.mock("@/sketch-detail/title-toolbar", () => ({
 describe("SketchDetail", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(isSketchId).mockReturnValue(true);
     vi.mocked(createSupabaseServerClient).mockResolvedValue(
       {} as Awaited<ReturnType<typeof createSupabaseServerClient>>,
     );
@@ -86,11 +89,14 @@ describe("SketchDetail", () => {
     expect(vi.mocked(SketchCanvas).mock.calls[0][0]).toEqual({ sketch });
   });
 
-  test("should call notFound without fetching when the id is not a uuid", async () => {
-    await expect(SketchDetail({ id: "not-a-uuid" })).rejects.toThrow(
+  test("should call notFound without fetching when isSketchId returns false", async () => {
+    vi.mocked(isSketchId).mockReturnValue(false);
+
+    await expect(SketchDetail({ id: validId })).rejects.toThrow(
       "NEXT_NOT_FOUND",
     );
 
+    expect(isSketchId).toHaveBeenCalledWith(validId);
     expect(notFound).toHaveBeenCalled();
     expect(getSketch).not.toHaveBeenCalled();
   });
