@@ -1,0 +1,1 @@
+Ultra-Simple-Wireframer: 思いついたアイデアをその場でスケッチして、そのままLLMに渡せるキャンバスです

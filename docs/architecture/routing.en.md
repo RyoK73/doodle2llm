@@ -158,6 +158,8 @@ There is no `twitter-image`; this one image serves both.
   The width and the height (`og:image:width` and `og:image:height`) are also output automatically.
 - `layout.tsx` does not write `images` in `openGraph` or `twitter`.
   `layout.tsx` specifies `twitter:card` as `summary_large_image`.
+- `src/app/opengraph-image.alt.txt` becomes `og:image:alt` and `twitter:image:alt`.
+  It has the site name and the description, the same values as `SITE_NAME` and `SITE_DESCRIPTION`.
 - A path that ends with `.png` is excluded by the matcher of `src/proxy.ts`.
   So fetching the image does not refresh the auth session.
 - See "Share image" in [Overview](./overview.en.md) for how the image is made.
