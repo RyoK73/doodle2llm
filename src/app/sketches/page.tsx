@@ -1,7 +1,10 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { cn } from "cn";
 import { navigationMenuInsetClassName } from "@/design-system/constants";
 import { SketchList, SketchListSkeleton } from "@/sketch-list";
+
+export const metadata: Metadata = { title: "スケッチ" };
 
 const page = () => {
   return (
