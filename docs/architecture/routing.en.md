@@ -183,6 +183,21 @@ Each page specifies only `title`.
 | `null` (nonexistent, or a sketch of another user) | `{}`                           |
 | Error                                             | `{}`                           |
 
+## Sitemap
+
+`src/app/sitemap.ts` serves `/sitemap.xml`.
+It only passes the value of `getSiteUrl()` (`src/utils/getSiteUrl.ts`) to `buildSitemap` in `src/sitemap/`.
+
+- It lists 3 pages: `/`, `/signin` and `/signup`.
+  The pages under `/sketches` need sign-in, so they are not included.
+- Each URL is the value of `getSiteUrl()` followed by the path.
+  Only `/` ends with a slash (for example, `https://example.com/`).
+  `/signin` and `/signup` have no trailing slash.
+- Each entry has only `url`.
+  `lastModified`, `changeFrequency` and `priority` are not specified.
+- When `NEXT_PUBLIC_SITE_URL` is invalid, the exception of `getSiteUrl()` is passed on as it is.
+  See [Environment variables](../setup/environment.en.md).
+
 ## Web Analytics
 
 `src/app/layout.tsx` places `WebAnalytics` from `src/analytics/` at the end of `body`.

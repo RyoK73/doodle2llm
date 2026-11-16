@@ -15,7 +15,7 @@
 | `NEXT_PUBLIC_SUPABASE_URL`      | アプリ(ブラウザ、サーバー)          | SupabaseプロジェクトのURL                 |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | アプリ(ブラウザ、サーバー)          | Supabaseのanonキー                        |
 | `SUPABASE_SECRET_KEY`           | アプリ(サーバーのみ)                | Supabaseのsecret key(匿名サインイン専用)  |
-| `NEXT_PUBLIC_SITE_URL`          | アプリ(`getSiteUrl`)                | サイトの公開URL(`metadataBase`の基準)     |
+| `NEXT_PUBLIC_SITE_URL`          | アプリ(`getSiteUrl`)                | サイトの公開URL(`metadataBase`、sitemap)  |
 | `SUPABASE_LOCAL_URL`            | ローカルDBに対するテスト            | ローカルSupabaseのAPI URL                 |
 | `SUPABASE_LOCAL_ANON_KEY`       | ローカルDBに対するテスト            | ローカルSupabaseのanonキー                |
 | `SUPABASE_LOCAL_ADMIN_KEY`      | ローカルDBに対するテスト            | ローカルSupabaseの管理者キー              |
@@ -30,7 +30,7 @@
   - 末尾のスラッシュは、取り除きます。
   - `VERCEL_ENV`が`production`(Vercelの本番)のときだけ、`https://`で始まらない値はエラーです。
     本番で未設定の場合も、`http://localhost:3000`が`https://`でないため、エラーになります。
-  - `src/app/layout.tsx`の`metadataBase`に使います。
+  - `src/app/layout.tsx`の`metadataBase`と、`src/app/sitemap.ts`のURLに使います。
 - `SUPABASE_SECRET_KEY`は、RLSをバイパスします。
   `NEXT_PUBLIC_`を付けず、ブラウザに公開しないでください。
   使うのは、匿名サインイン専用のクライアントだけです。
