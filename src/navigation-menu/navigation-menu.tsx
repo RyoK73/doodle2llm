@@ -16,7 +16,7 @@ import { SignInLink } from "@/navigation-menu/sign-in-link";
 type MenuItem = {
   key: string;
   Item: ComponentType<{ className?: string }>;
-  visibleFor: Exclude<AuthState, "signedOut">[];
+  visibleFor: AuthState[];
 };
 
 const menuItems: MenuItem[] = [
@@ -33,18 +33,16 @@ const menuItems: MenuItem[] = [
   {
     key: "theme-toggle",
     Item: ThemeToggleButton,
-    visibleFor: ["guest", "registered"],
+    visibleFor: ["signedOut", "guest", "registered"],
   },
-  { key: "sign-up", Item: SignUpLink, visibleFor: ["guest"] },
-  { key: "sign-in", Item: SignInLink, visibleFor: ["guest"] },
+  { key: "sign-up", Item: SignUpLink, visibleFor: ["signedOut", "guest"] },
+  { key: "sign-in", Item: SignInLink, visibleFor: ["signedOut", "guest"] },
   { key: "sign-out", Item: SignOutButton, visibleFor: ["registered"] },
 ];
 
 const NavigationMenu = async () => {
   const serverClient = await createSupabaseServerClient();
   const userState = await getAuthState(serverClient);
-
-  if (userState === "signedOut") return null;
 
   return (
     <nav

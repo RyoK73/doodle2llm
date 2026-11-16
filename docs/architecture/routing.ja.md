@@ -12,6 +12,8 @@
 
 パスごとのリダイレクトは[認証](./auth.ja.md)を参照してください。
 `/signin`と`/signup`の挙動も、[認証](./auth.ja.md)を参照してください。
+`src/app/(auth)/layout.tsx`は、`/signin`と`/signup`に、`NavigationMenu`を表示します。
+詳細は[ツールバー](./toolbar.ja.md)を参照してください。
 
 ## ランディングページ(`/`)
 

@@ -12,6 +12,8 @@
 
 See [Authentication](./auth.en.md) for the redirects by path.
 See [Authentication](./auth.en.md) also for the behavior of `/signin` and `/signup`.
+`src/app/(auth)/layout.tsx` renders `NavigationMenu` on `/signin` and `/signup`.
+See [Toolbars](./toolbar.en.md) for details.
 
 ## Landing page (`/`)
 

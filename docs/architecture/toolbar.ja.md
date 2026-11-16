@@ -5,14 +5,14 @@
 画面の上に重ねて浮かせるUIが、4つあります。
 このドキュメントでは、4つに共通する仕様をまとめたあと、それぞれの特徴を説明します。
 
-| 名前                   | コンポーネント   | 配置                                   | 表示されるページ              |
-| ---------------------- | ---------------- | -------------------------------------- | ----------------------------- |
-| ナビゲーションメニュー | `NavigationMenu` | 左端から`left-4`、縦中央(`fixed`)      | `/sketches`、`/sketches/[id]` |
-| タイトル用ツールバー   | `TitleToolbar`   | 上端から`top-4`、横中央(`absolute`)    | `/sketches/[id]`              |
-| 操作用ツールバー       | `ControlToolbar` | 下端から`bottom-4`、横中央(`absolute`) | `/sketches/[id]`              |
-| 受け渡し用ツールバー   | `HandoffToolbar` | 右端から`right-4`、縦中央(`absolute`)  | `/sketches/[id]`              |
+| 名前                   | コンポーネント   | 配置                                   | 表示されるページ                                    |
+| ---------------------- | ---------------- | -------------------------------------- | --------------------------------------------------- |
+| ナビゲーションメニュー | `NavigationMenu` | 左端から`left-4`、縦中央(`fixed`)      | `/sketches`、`/sketches/[id]`、`/signin`、`/signup` |
+| タイトル用ツールバー   | `TitleToolbar`   | 上端から`top-4`、横中央(`absolute`)    | `/sketches/[id]`                                    |
+| 操作用ツールバー       | `ControlToolbar` | 下端から`bottom-4`、横中央(`absolute`) | `/sketches/[id]`                                    |
+| 受け渡し用ツールバー   | `HandoffToolbar` | 右端から`right-4`、縦中央(`absolute`)  | `/sketches/[id]`                                    |
 
-ナビゲーションメニューは`src/app/sketches/layout.tsx`が表示します。
+ナビゲーションメニューは`src/app/sketches/layout.tsx`と`src/app/(auth)/layout.tsx`が表示します。
 ほかの3つは、`SketchCanvas`(`src/sketch-detail/sketch-canvas.tsx`)が表示します。
 `SketchCanvas`の詳細は[概要](./overview.ja.md)を参照してください。
 
@@ -58,7 +58,8 @@
 ## ナビゲーションメニュー
 
 `NavigationMenu`(`src/navigation-menu/navigation-menu.tsx`)は、Server Componentです。
-`src/app/sketches/layout.tsx`が表示するので、`/sketches`と`/sketches/[id]`の両方に出ます。
+`src/app/sketches/layout.tsx`が`/sketches`配下に、`src/app/(auth)/layout.tsx`が`/signin`と`/signup`に表示します。
+そのため、`/sketches`、`/sketches/[id]`、`/signin`、`/signup`に出ます。
 画面の左端から`left-4`の位置に固定し(`fixed`)、縦中央に表示します。
 本文の幅は占有しないので、本文がメニューの下に隠れないようにしたいページは、左余白に`navigationMenuInsetClassName`(`src/design-system/constants.ts`)を使います。
 `/sketches`は、この余白を使っています。
@@ -70,17 +71,17 @@ tooltipは、項目の右側に出します(`TOOLTIP_SIDE`は`"right"`)。
 ### 表示条件
 
 `NavigationMenu`は、`createSupabaseServerClient`で作成したクライアントを`getAuthState`に渡し、認証状態を取得します。
-`signedOut`の場合は、メニュー全体を表示しません(`null`を返します)。
 項目は`menuItems`で定義し、`visibleFor`に含まれる認証状態のときだけ表示します。
+`visibleFor`には、`signedOut`、`guest`、`registered`のすべてを指定できます。
 
-| 項目           | コンポーネント        | `guest` | `registered` | 状態     |
-| -------------- | --------------------- | ------- | ------------ | -------- |
-| スケッチ一覧   | `SketchListLink`      | 表示    | 表示         | 実装済み |
-| 新規作成       | `NewSketchIconButton` | 表示    | 表示         | 実装済み |
-| テーマ切替     | `ThemeToggleButton`   | 表示    | 表示         | 実装済み |
-| アカウント登録 | `SignUpLink`          | 表示    | 非表示       | 実装済み |
-| サインイン     | `SignInLink`          | 表示    | 非表示       | 実装済み |
-| サインアウト   | `SignOutButton`       | 非表示  | 表示         | 実装済み |
+| 項目           | コンポーネント        | `signedOut` | `guest` | `registered` | 状態     |
+| -------------- | --------------------- | ----------- | ------- | ------------ | -------- |
+| スケッチ一覧   | `SketchListLink`      | 非表示      | 表示    | 表示         | 実装済み |
+| 新規作成       | `NewSketchIconButton` | 非表示      | 表示    | 表示         | 実装済み |
+| テーマ切替     | `ThemeToggleButton`   | 表示        | 表示    | 表示         | 実装済み |
+| アカウント登録 | `SignUpLink`          | 表示        | 表示    | 非表示       | 実装済み |
+| サインイン     | `SignInLink`          | 表示        | 表示    | 非表示       | 実装済み |
+| サインアウト   | `SignOutButton`       | 非表示      | 非表示  | 表示         | 実装済み |
 
 ### ファイル
 
