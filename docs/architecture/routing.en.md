@@ -144,9 +144,23 @@ Each page specifies only `title`.
 | `title.template` | `%s \| Ultra-Simple-Wireframer`. When a page specifies `title`, the value goes into `%s`                                    |
 | `description`    | "思いついたアイデアをその場でスケッチして、そのままLLMに渡せるキャンバスです"                                               |
 | `openGraph`      | `type` is `website`, `siteName`, `locale` is `ja_JP`, `title` and `description`. `url` and `images` are not specified       |
+| `twitter`        | `card` is `summary_large_image`, `title` and `description`. `images` is not specified                                       |
 
 - `<html lang>` is fixed to `ja`.
 - The site name and the description are constants in `layout.tsx` (`SITE_NAME` and `SITE_DESCRIPTION`).
+
+### Share image
+
+By the file convention, `src/app/opengraph-image.png` (1200x630) becomes `og:image` and `twitter:image` of every page.
+There is no `twitter-image`; this one image serves both.
+
+- The URL of the image is output as an absolute URL, using `metadataBase`.
+  The width and the height (`og:image:width` and `og:image:height`) are also output automatically.
+- `layout.tsx` does not write `images` in `openGraph` or `twitter`.
+  `layout.tsx` specifies `twitter:card` as `summary_large_image`.
+- A path that ends with `.png` is excluded by the matcher of `src/proxy.ts`.
+  So fetching the image does not refresh the auth session.
+- See "Share image" in [Overview](./overview.en.md) for how the image is made.
 
 ### Title of each page
 

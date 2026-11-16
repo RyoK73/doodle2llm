@@ -144,9 +144,23 @@
 | `title.template` | `%s \| Ultra-Simple-Wireframer`。ページが`title`を指定したとき、`%s`にその値が入ります                                     |
 | `description`    | 「思いついたアイデアをその場でスケッチして、そのままLLMに渡せるキャンバスです」                                            |
 | `openGraph`      | `type`は`website`、`siteName`、`locale`は`ja_JP`、`title`、`description`です。`url`と`images`は指定していません            |
+| `twitter`        | `card`は`summary_large_image`、`title`、`description`です。`images`は指定していません                                      |
 
 - `<html lang>`は`ja`固定です。
 - サイト名と説明は、`layout.tsx`の定数(`SITE_NAME`、`SITE_DESCRIPTION`)です。
+
+### 共有画像
+
+`src/app/opengraph-image.png`(1200x630)は、ファイル規約により、全ページの`og:image`と`twitter:image`になります。
+`twitter-image`は置かず、この1枚が兼ねます。
+
+- 画像のURLは、`metadataBase`を使った絶対URLで出力されます。
+  幅と高さ(`og:image:width`、`og:image:height`)も、自動で出力されます。
+- `layout.tsx`の`openGraph`と`twitter`には、`images`を書きません。
+  `twitter:card`は、`layout.tsx`で`summary_large_image`を指定します。
+- 拡張子が`.png`のパスは、`src/proxy.ts`のmatcherから除外されます。
+  そのため、画像の取得で認証セッションの更新は走りません。
+- 画像の作り方は[概要](./overview.ja.md)の「共有画像」を参照してください。
 
 ### ページごとのtitle
 

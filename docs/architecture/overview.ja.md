@@ -45,6 +45,7 @@ fabric.jsだけは、`^`を付けずにバージョンを固定しています�
 | `src/utils/`                    | 共通の型と、サイトURLを返す関数(`getSiteUrl`)                |
 | `src/dev-scripts/`              | 開発用スクリプト                                             |
 | `src/test/`                     | テスト用のヘルパー                                           |
+| `assets/`                       | 画像の変換前のソース(共有画像のSVG)                          |
 
 ## 描画(`src/sketch-detail/`の`canvas/`・`shapes/`・`selection/`・`history/`・`viewport/`)
 
@@ -175,6 +176,30 @@ fabric.jsだけは、`^`を付けずにバージョンを固定しています�
 - 読み込みに失敗した場合、または`canvas_json`がオブジェクトでない場合は、キャンバスとボタンを表示しません。
   `role="alert"`の文言と、一覧へのリンクを表示します。
   自動保存が、読み込めなかった内容を上書きするのを防ぐためです。
+
+## 共有画像
+
+SNSで共有したときの画像は、静的なPNG(`src/app/opengraph-image.png`、1200x630)です。
+変換前のSVGは`assets/opengraph-image.svg`にあります。
+動的に生成(`ImageResponse`)しない理由は、全ページで共通の1枚で足りるためです。
+日本語のフォントを実行時に扱う必要もなく、手描き風の見た目を、SVGで作り込めます。
+メタデータの出力は[ルーティング](./routing.ja.md)を参照してください。
+
+内容を変えるときは、SVGを直して、PNGを作り直します。
+
+1. Zen Kurenaido(`Regular`)のTTFを、Google Fonts(`github.com/google/fonts`の`ofl/zenkurenaido/`)から取得します。
+   リポジトリにはコミットしません。
+2. fontconfigがTTFを見つけられるようにして、`rsvg-convert`で変換します。
+
+```bash
+FONTCONFIG_FILE=<TTFのディレクトリを指定した設定ファイル> \
+  rsvg-convert -w 1200 -h 630 assets/opengraph-image.svg -o src/app/opengraph-image.png
+```
+
+- SVGの文言は、`layout.tsx`の`SITE_NAME`、`SITE_DESCRIPTION`と同じ値です。
+  どちらかを変えたら、もう一方も合わせます。
+- アイコンの図柄は、`src/app/icon.svg`を拡大したものです。
+- 色は、`DESIGN.md`のトークンの値です。
 
 ## 次のステップ
 
