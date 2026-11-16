@@ -39,6 +39,7 @@ See [Directory structure](../rules/directory-structure.en.md) for the rule.
 | `src/sketch-detail/`            | The sketch page (showing, drawing and saving to the DB)       |
 | `src/design-system/`            | Generic UI parts                                              |
 | `src/sketch-list/`              | Showing the sketch list (Server and Client Components)        |
+| `src/sitemap/`                  | Building the sitemap entries (`buildSitemap`)                 |
 | `src/error-pages/`              | Shared parts for the 404 and error pages                      |
 | `src/supabase/`                 | Supabase clients, auth, CRUD and DB tests                     |
 | `src/utils/`                    | Shared types and the function for the site URL (`getSiteUrl`) |

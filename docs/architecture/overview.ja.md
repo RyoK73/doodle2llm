@@ -38,6 +38,7 @@ fabric.jsだけは、`^`を付けずにバージョンを固定しています�
 | `src/new-sketch/`               | スケッチの新規作成(ボタンとServer Action)                    |
 | `src/sketch-detail/`            | スケッチの個別ページ(表示、描画、DBへの保存)                 |
 | `src/sketch-list/`              | スケッチ一覧の表示(Server ComponentとClient Component)       |
+| `src/sitemap/`                  | サイトマップのエントリの組み立て(`buildSitemap`)             |
 | `src/design-system/`            | 汎用UI部品                                                   |
 | `src/error-pages/`              | 404とエラー画面の共通部品                                    |
 | `src/supabase/`                 | Supabaseのクライアント、認証、CRUD、DBテスト                 |
