@@ -6,6 +6,7 @@ import {
 } from "@/design-system/constants";
 import { getAuthState, type AuthState } from "@/supabase/auth/getAuthState";
 import { createSupabaseServerClient } from "@/supabase/utils/serverClient";
+import { TopPageLink } from "@/navigation-menu/top-page-link";
 import { SketchListLink } from "@/navigation-menu/sketch-list-link";
 import { NewSketchIconButton } from "@/navigation-menu/new-sketch-icon-button";
 import { ThemeToggleButton } from "@/navigation-menu/theme-toggle-button";
@@ -20,6 +21,7 @@ type MenuItem = {
 };
 
 const menuItems: MenuItem[] = [
+  { key: "top-page", Item: TopPageLink, visibleFor: ["signedOut"] },
   {
     key: "sketch-list",
     Item: SketchListLink,

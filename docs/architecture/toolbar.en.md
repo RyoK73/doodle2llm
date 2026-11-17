@@ -76,6 +76,7 @@ The items are defined in `menuItems`, and an item is shown only when the auth st
 
 | Item             | Component             | `signedOut` | `guest` | `registered` | Status      |
 | ---------------- | --------------------- | ----------- | ------- | ------------ | ----------- |
+| Top page         | `TopPageLink`         | Shown       | Hidden  | Hidden       | Implemented |
 | Sketch list      | `SketchListLink`      | Hidden      | Shown   | Shown        | Implemented |
 | New sketch       | `NewSketchIconButton` | Hidden      | Shown   | Shown        | Implemented |
 | Theme toggle     | `ThemeToggleButton`   | Shown       | Shown   | Shown        | Implemented |
@@ -91,6 +92,7 @@ The items are defined in `menuItems`, and an item is shown only when the auth st
 | `sketch-list-link.tsx`       | Client Component. A link to `/sketches`                                      |
 | `new-sketch-icon-button.tsx` | Passes an icon and the tooltip side to `NewSketchButton` (`src/new-sketch/`) |
 | `constants.ts`               | Holds the tooltip side (`TOOLTIP_SIDE`). Not exported outside                |
+| `top-page-link.tsx`          | A link to `/` (the landing page)                                             |
 | `sign-up-link.tsx`           | A link to `/signup`                                                          |
 | `sign-in-link.tsx`           | A link to `/signin`                                                          |
 | `theme-toggle-button.tsx`    | Client Component. Switches between `dark` and `light`                        |
@@ -99,6 +101,10 @@ The items are defined in `menuItems`, and an item is shown only when the auth st
 
 ### Details
 
+- `TopPageLink` is a link to `/` (the landing page).
+  It is shown only when the state is `signedOut`, at the top of the menu.
+  Its icon is `LuDoorOpen`.
+  It shows the link and its tooltip ("トップページへ") with `MyToolTip` and `Link`.
 - `SketchListLink` highlights itself as the current page (`bg-paint-yellow`) only when `usePathname` equals `/sketches`.
   It does not highlight on `/sketches/[id]`.
 - `NewSketchIconButton` passes `variant="icon"` and `tooltipSide` to `NewSketchButton`.

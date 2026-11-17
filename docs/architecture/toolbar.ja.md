@@ -76,6 +76,7 @@ tooltipは、項目の右側に出します(`TOOLTIP_SIDE`は`"right"`)。
 
 | 項目           | コンポーネント        | `signedOut` | `guest` | `registered` | 状態     |
 | -------------- | --------------------- | ----------- | ------- | ------------ | -------- |
+| トップページ   | `TopPageLink`         | 表示        | 非表示  | 非表示       | 実装済み |
 | スケッチ一覧   | `SketchListLink`      | 非表示      | 表示    | 表示         | 実装済み |
 | 新規作成       | `NewSketchIconButton` | 非表示      | 表示    | 表示         | 実装済み |
 | テーマ切替     | `ThemeToggleButton`   | 表示        | 表示    | 表示         | 実装済み |
@@ -91,6 +92,7 @@ tooltipは、項目の右側に出します(`TOOLTIP_SIDE`は`"right"`)。
 | `sketch-list-link.tsx`       | Client Component。`/sketches`へのリンクです。                                   |
 | `new-sketch-icon-button.tsx` | `NewSketchButton`(`src/new-sketch/`)に、アイコンとtooltipの表示位置を渡します。 |
 | `constants.ts`               | tooltipの表示位置(`TOOLTIP_SIDE`)を持ちます。外部には公開しません。             |
+| `top-page-link.tsx`          | `/`(ランディングページ)へのリンクです。                                         |
 | `sign-up-link.tsx`           | `/signup`へのリンクです。                                                       |
 | `sign-in-link.tsx`           | `/signin`へのリンクです。                                                       |
 | `theme-toggle-button.tsx`    | Client Component。`dark`と`light`を切り替えます。                               |
@@ -99,6 +101,10 @@ tooltipは、項目の右側に出します(`TOOLTIP_SIDE`は`"right"`)。
 
 ### 詳細
 
+- `TopPageLink`は、`/`(ランディングページ)へのリンクです。
+  `signedOut`のときだけ、メニューの一番上に表示します。
+  アイコンは`LuDoorOpen`です。
+  リンクとtooltip(「トップページへ」)は、`MyToolTip`と`Link`で表示します。
 - `SketchListLink`は、`usePathname`が`/sketches`と一致するときだけ、現在地として強調します(`bg-paint-yellow`)。
   `/sketches/[id]`では強調しません。
 - `NewSketchIconButton`は、`NewSketchButton`に`variant="icon"`と`tooltipSide`を渡します。
