@@ -62,7 +62,7 @@
 そのため、`/sketches`、`/sketches/[id]`、`/signin`、`/signup`に出ます。
 画面の左端から`left-4`の位置に固定し(`fixed`)、縦中央に表示します。
 本文の幅は占有しないので、本文がメニューの下に隠れないようにしたいページは、左余白に`navigationMenuInsetClassName`(`src/design-system/constants.ts`)を使います。
-`/sketches`は、この余白を使っています。
+`/sketches`と、`/signin`・`/signup`(`src/app/(auth)/layout.tsx`)は、この余白を使っています。
 `/sketches/[id]`は、canvasを画面全体に広げるので、余白は付けません。
 各項目はアイコンだけのボタンかリンクです。
 tooltipは、項目の右側に出します(`TOOLTIP_SIDE`は`"right"`)。
