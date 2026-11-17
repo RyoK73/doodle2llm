@@ -14,21 +14,24 @@ describe("signedOut", () => {
     vi.mocked(getAuthState).mockResolvedValue("signedOut");
   });
 
-  it("should show only ThemeToggleButton, SignUpLink, SignInLink in this order", async () => {
+  it("should show only TopPageLink, ThemeToggleButton, SignUpLink, SignInLink in this order", async () => {
     render(await NavigationMenu());
     const navigation = screen.getByRole("navigation", {
       name: "ナビゲーションメニュー",
     });
     const items = within(navigation).getAllByRole("listitem");
-    expect(items).toHaveLength(3);
+    expect(items).toHaveLength(4);
     expect(
-      within(items[0]).getByRole("button", { name: "テーマ切り替え" }),
+      within(items[0]).getByRole("link", { name: "トップページへ" }),
     ).toBeInTheDocument();
     expect(
-      within(items[1]).getByRole("link", { name: "アカウント登録" }),
+      within(items[1]).getByRole("button", { name: "テーマ切り替え" }),
     ).toBeInTheDocument();
     expect(
-      within(items[2]).getByRole("link", { name: "サインイン" }),
+      within(items[2]).getByRole("link", { name: "アカウント登録" }),
+    ).toBeInTheDocument();
+    expect(
+      within(items[3]).getByRole("link", { name: "サインイン" }),
     ).toBeInTheDocument();
   });
   it("should not show SketchListLink, NewSketchButton, SignOutButton", async () => {
