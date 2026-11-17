@@ -39,9 +39,9 @@ describe("getSiteUrl", () => {
     });
   });
 
-  describe("Production Environment", () => {
+  describe.each(["production", "preview"])("%s Environment", (vercelEnv) => {
     beforeEach(() => {
-      vi.stubEnv("VERCEL_ENV", "production");
+      vi.stubEnv("VERCEL_ENV", vercelEnv);
     });
 
     test.each([

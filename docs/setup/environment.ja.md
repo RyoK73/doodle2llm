@@ -28,8 +28,9 @@
   - 未設定のときは、`http://localhost:3000`になります。
   - 空文字と空白のみは、エラーです。
   - 末尾のスラッシュは、取り除きます。
-  - `VERCEL_ENV`が`production`(Vercelの本番)のときだけ、`https://`で始まらない値はエラーです。
-    本番で未設定の場合も、`http://localhost:3000`が`https://`でないため、エラーになります。
+  - `VERCEL_ENV`が`production`(Vercelの本番)または`preview`(Vercelのプレビュー)のときだけ、`https://`で始まらない値はエラーになります。
+    本番とプレビューで未設定の場合も、`http://localhost:3000`が`https://`でないため、エラーになります。
+    そのため、VercelのEnvironment Variablesでは、ProductionとPreviewの両方に`NEXT_PUBLIC_SITE_URL`を登録します。
   - `src/app/layout.tsx`の`metadataBase`と、`src/app/sitemap.ts`のURLに使います。
 - `SUPABASE_SECRET_KEY`は、RLSをバイパスします。
   `NEXT_PUBLIC_`を付けず、ブラウザに公開しないでください。

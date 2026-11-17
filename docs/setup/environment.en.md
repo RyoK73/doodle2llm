@@ -27,8 +27,9 @@
   - When it is not set, the value is `http://localhost:3000`.
   - An empty string and a string of only spaces are errors.
   - A trailing slash is removed.
-  - Only when `VERCEL_ENV` is `production` (the production of Vercel), a value that does not start with `https://` is an error.
-    When it is not set in production, it is also an error, because `http://localhost:3000` is not `https://`.
+  - Only when `VERCEL_ENV` is `production` (the production of Vercel) or `preview` (the preview of Vercel), a value that does not start with `https://` is an error.
+    When it is not set in production or preview, it is also an error, because `http://localhost:3000` is not `https://`.
+    So, register `NEXT_PUBLIC_SITE_URL` for both Production and Preview in the Environment Variables of Vercel.
   - It is used for `metadataBase` in `src/app/layout.tsx` and for the URLs in `src/app/sitemap.ts`.
 - `SUPABASE_SECRET_KEY` bypasses RLS.
   Do not add `NEXT_PUBLIC_`, and do not expose it to the browser.
