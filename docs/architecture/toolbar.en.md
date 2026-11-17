@@ -62,7 +62,7 @@ See [Overview](./overview.en.md) for the details of `SketchCanvas`.
 So it appears on `/sketches`, `/sketches/[id]`, `/signin` and `/signup`.
 It is fixed (`fixed`) at `left-4` from the left edge of the screen and vertically centered.
 It does not take any width from the content, so a page that must not go under the menu uses `navigationMenuInsetClassName` (`src/design-system/constants.ts`) for its left padding.
-`/sketches` uses this padding.
+`/sketches`, and `/signin` and `/signup` (`src/app/(auth)/layout.tsx`), use this padding.
 `/sketches/[id]` does not add it, because the canvas fills the whole screen.
 Each item is an icon-only button or link.
 The tooltip opens on the right of the item (`TOOLTIP_SIDE` is `"right"`).
