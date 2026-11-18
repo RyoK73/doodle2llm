@@ -13,7 +13,7 @@ const zenKurenaido = Zen_Kurenaido({
   subsets: ["latin"],
 });
 
-const SITE_NAME = "Ultra-Simple-Wireframer";
+const SITE_NAME = "Doodle2LLM";
 const SITE_DESCRIPTION =
   "思いついたアイデアをその場でスケッチして、そのままLLMに渡せるキャンバスです";
 

@@ -33,7 +33,7 @@ describe("LandingPage", () => {
       expect(
         screen.getByRole("heading", {
           level: 1,
-          name: "Ultra-Simple-Wireframer",
+          name: "Doodle2LLM",
         }),
       ).toBeInTheDocument();
     },
