@@ -1,4 +1,4 @@
-# Ultra-Simple-Wireframer
+# Doodle2LLM
 
 A tool for quickly sketching application UI mockups and sharing them with LLMs and other people.
 
