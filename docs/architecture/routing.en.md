@@ -142,8 +142,8 @@ Each page specifies only `title`.
 | Item             | Value                                                                                                                       |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `metadataBase`   | The value of `getSiteUrl()` (`src/utils/getSiteUrl.ts`) as a `URL`. See [Environment variables](../setup/environment.en.md) |
-| `title.default`  | `Ultra-Simple-Wireframer`. It is used when a page does not specify `title`                                                  |
-| `title.template` | `%s \| Ultra-Simple-Wireframer`. When a page specifies `title`, the value goes into `%s`                                    |
+| `title.default`  | `Doodle2LLM`. It is used when a page does not specify `title`                                                               |
+| `title.template` | `%s \| Doodle2LLM`. When a page specifies `title`, the value goes into `%s`                                                 |
 | `description`    | "思いついたアイデアをその場でスケッチして、そのままLLMに渡せるキャンバスです"                                               |
 | `openGraph`      | `type` is `website`, `siteName`, `locale` is `ja_JP`, `title` and `description`. `url` and `images` are not specified       |
 | `twitter`        | `card` is `summary_large_image`, `title` and `description`. `images` is not specified                                       |
@@ -170,14 +170,14 @@ There is no `twitter-image`; this one image serves both.
 
 | Path             | How it is specified | title                                            |
 | ---------------- | ------------------- | ------------------------------------------------ |
-| `/`              | Not specified       | `Ultra-Simple-Wireframer` (`default`)            |
+| `/`              | Not specified       | `Doodle2LLM` (`default`)                         |
 | `/signin`        | `metadata`          | `サインイン`                                     |
 | `/signup`        | `metadata`          | `アカウント登録`                                 |
 | `/sketches`      | `metadata`          | `スケッチ`                                       |
 | `/sketches/[id]` | `generateMetadata`  | The `title` of the sketch (see the next section) |
 
 - `not-found.tsx` and `error.tsx` do not specify `title`.
-- By `title.template`, `/signin` is shown as `サインイン | Ultra-Simple-Wireframer`.
+- By `title.template`, `/signin` is shown as `サインイン | Doodle2LLM`.
 
 ### `generateMetadata` of `/sketches/[id]`
 

@@ -142,8 +142,8 @@
 | 項目             | 値                                                                                                                         |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `metadataBase`   | `getSiteUrl()`(`src/utils/getSiteUrl.ts`)の値を`URL`にしたものです。環境変数は[環境変数](../setup/environment.ja.md)を参照 |
-| `title.default`  | `Ultra-Simple-Wireframer`。ページが`title`を指定しないときの値です                                                         |
-| `title.template` | `%s \| Ultra-Simple-Wireframer`。ページが`title`を指定したとき、`%s`にその値が入ります                                     |
+| `title.default`  | `Doodle2LLM`。ページが`title`を指定しないときの値です                                                                      |
+| `title.template` | `%s \| Doodle2LLM`。ページが`title`を指定したとき、`%s`にその値が入ります                                                  |
 | `description`    | 「思いついたアイデアをその場でスケッチして、そのままLLMに渡せるキャンバスです」                                            |
 | `openGraph`      | `type`は`website`、`siteName`、`locale`は`ja_JP`、`title`、`description`です。`url`と`images`は指定していません            |
 | `twitter`        | `card`は`summary_large_image`、`title`、`description`です。`images`は指定していません                                      |
@@ -168,16 +168,16 @@
 
 ### ページごとのtitle
 
-| パス             | 指定方法           | title                                |
-| ---------------- | ------------------ | ------------------------------------ |
-| `/`              | 指定なし           | `Ultra-Simple-Wireframer`(`default`) |
-| `/signin`        | `metadata`         | `サインイン`                         |
-| `/signup`        | `metadata`         | `アカウント登録`                     |
-| `/sketches`      | `metadata`         | `スケッチ`                           |
-| `/sketches/[id]` | `generateMetadata` | スケッチの`title`(次の節を参照)      |
+| パス             | 指定方法           | title                           |
+| ---------------- | ------------------ | ------------------------------- |
+| `/`              | 指定なし           | `Doodle2LLM`(`default`)         |
+| `/signin`        | `metadata`         | `サインイン`                    |
+| `/signup`        | `metadata`         | `アカウント登録`                |
+| `/sketches`      | `metadata`         | `スケッチ`                      |
+| `/sketches/[id]` | `generateMetadata` | スケッチの`title`(次の節を参照) |
 
 - `not-found.tsx`と`error.tsx`は、`title`を指定しません。
-- `title.template`により、`/signin`の表示は`サインイン | Ultra-Simple-Wireframer`になります。
+- `title.template`により、`/signin`の表示は`サインイン | Doodle2LLM`になります。
 
 ### `/sketches/[id]`の`generateMetadata`
 

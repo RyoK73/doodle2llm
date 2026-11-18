@@ -1,6 +1,6 @@
 English | [日本語](./README.ja.md)
 
-# Ultra-Simple-Wireframer
+# Doodle2LLM
 
 A canvas for sketching an idea the moment it strikes and handing it straight to an LLM.
 
@@ -15,12 +15,12 @@ can be faster and more accurate.
 
 This project aims to cut that lag down to the minimum.
 
-_Ultra-Simple-Wireframer_ is a tool for bringing pre-verbal ideas directly into a conversation with an LLM.
+_Doodle2LLM_ is a tool for bringing pre-verbal ideas directly into a conversation with an LLM.
 
 ## What I value: simplicity and speed
 
 Figma, Canva, and Excalidraw are all excellent tools.
-_Ultra-Simple-Wireframer_ doesn't compete with them on feature count. Instead, it focuses on the simplicity and speed that tend to fade as tools grow more feature-rich.
+_Doodle2LLM_ doesn't compete with them on feature count. Instead, it focuses on the simplicity and speed that tend to fade as tools grow more feature-rich.
 
 ## Intended use cases
 
