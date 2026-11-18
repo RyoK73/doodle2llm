@@ -13,7 +13,7 @@ const Introduction = ({ children }: { children: ReactNode }) => {
       <div className="relative flex flex-col justify-center gap-4 brush-a bg-background p-5 text-left md:col-span-10 md:col-start-1 md:row-span-3 md:row-start-3">
         <Dab className="-top-3 -left-3 bg-paint-blue" />
         <Dab className="-right-2 -bottom-3 size-7 bg-paint-yellow" />
-        <h1 className="text-headline-lg">Ultra-Simple-Wireframer</h1>
+        <h1 className="text-headline-lg">Doodle2LLM</h1>
         <div className="text-body-md text-muted-foreground">
           <p>思いついたアイデアを、その場でスケッチ。そのままLLMへ。</p>
         </div>
