@@ -196,8 +196,10 @@ FONTCONFIG_FILE=<a config file that points to the directory of the TTF> \
   rsvg-convert -w 1200 -h 630 assets/opengraph-image.svg -o src/app/opengraph-image.png
 ```
 
-- The texts in the SVG are the same values as `SITE_NAME` and `SITE_DESCRIPTION` in `layout.tsx`.
+- The text in the SVG is the same value as `SITE_NAME` in `layout.tsx`.
   When you change one, change the other too.
+- The description (`SITE_DESCRIPTION`) is not put on the image.
+  The text is too small to read when the image is viewed on the web.
 - The icon is an enlarged drawing of `src/app/icon.svg`.
 - The colors other than the icon are the values of the tokens in `DESIGN.md`.
 
