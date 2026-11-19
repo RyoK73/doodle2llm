@@ -7,6 +7,7 @@ import {
   convertAnonymousUserToPermanentUser,
 } from "@/supabase/auth/signIn";
 import { toast } from "@/design-system/toast";
+import { logError } from "@/error-logging";
 
 const push = vi.fn();
 const refresh = vi.fn();
@@ -27,6 +28,7 @@ vi.mock("@/supabase/auth/signIn", () => ({
 }));
 
 vi.mock("@/design-system/toast", () => ({ toast: { add: vi.fn() } }));
+vi.mock("@/error-logging", () => ({ logError: vi.fn() }));
 
 const ok = { ok: true, value: undefined } as const;
 
@@ -106,6 +108,7 @@ describe("AuthForm", () => {
     );
     expect(push).toHaveBeenCalledWith("/sketches");
     expect(refresh).toHaveBeenCalled();
+    expect(logError).not.toHaveBeenCalled();
   });
 
   test("should convert the guest and verify the code as email_change on /signup", async () => {
@@ -158,6 +161,21 @@ describe("AuthForm", () => {
     expect(
       screen.queryByLabelText("確認コード（6桁）"),
     ).not.toBeInTheDocument();
+    expect(logError).not.toHaveBeenCalled();
+  });
+
+  test("should log the error as the feature send-auth-code when sending the code fails with an unknown code", async () => {
+    const failed = fail("something_else");
+    vi.mocked(signInWithOTP).mockResolvedValue(failed);
+    render(<AuthForm mode="signin" isGuest={false} />);
+
+    await sendCode();
+
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
+    expect(logError).toHaveBeenCalledOnce();
+    expect(logError).toHaveBeenCalledWith(failed.error, {
+      feature: "send-auth-code",
+    });
   });
 
   test("should keep the typed email when sending the code fails", async () => {
@@ -191,6 +209,26 @@ describe("AuthForm", () => {
     );
     expect(screen.getByLabelText("確認コード（6桁）")).toHaveValue("");
     expect(push).not.toHaveBeenCalled();
+    expect(logError).not.toHaveBeenCalled();
+  });
+
+  test("should log the error as the feature verify-auth-code when verifying the code fails with an unknown code", async () => {
+    const failed = fail("something_else");
+    vi.mocked(verifyOTP).mockResolvedValue(failed);
+    render(<AuthForm mode="signin" isGuest={false} />);
+    await sendCode();
+
+    await userEvent.type(
+      await screen.findByLabelText("確認コード（6桁）"),
+      "123456",
+    );
+    await userEvent.click(screen.getByRole("button", { name: "認証する" }));
+
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
+    expect(logError).toHaveBeenCalledOnce();
+    expect(logError).toHaveBeenCalledWith(failed.error, {
+      feature: "verify-auth-code",
+    });
   });
 
   test("should resend the code and show a toast", async () => {
@@ -219,6 +257,22 @@ describe("AuthForm", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent("送信しすぎ");
     expect(toast.add).not.toHaveBeenCalled();
+  });
+
+  test("should log the error as the feature send-auth-code when resending the code fails with an unknown code", async () => {
+    render(<AuthForm mode="signin" isGuest={false} />);
+    await sendCode();
+    const failed = fail("something_else");
+    vi.mocked(signInWithOTP).mockResolvedValue(failed);
+
+    await typeCode();
+    await userEvent.click(screen.getByRole("button", { name: "コードを再送" }));
+
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
+    expect(logError).toHaveBeenCalledOnce();
+    expect(logError).toHaveBeenCalledWith(failed.error, {
+      feature: "send-auth-code",
+    });
   });
 
   test("should go back to the email step when the email is changed", async () => {

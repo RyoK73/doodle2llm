@@ -1,4 +1,4 @@
-import { toAuthErrorInfo } from "@/auth-form/auth-error";
+import { isUnexpectedAuthError, toAuthErrorInfo } from "@/auth-form/auth-error";
 
 const errorWithCode = (code: string) =>
   Object.assign(new Error("message from supabase"), { code });
@@ -37,5 +37,25 @@ describe("toAuthErrorInfo", () => {
 
     expect(info.message).toContain("処理に失敗しました");
     expect(info.suggestSignIn).toBe(false);
+  });
+});
+
+describe("isUnexpectedAuthError", () => {
+  test.each([
+    "email_exists",
+    "over_email_send_rate_limit",
+    "otp_expired",
+    "validation_failed",
+    "email_address_invalid",
+  ])("should return false for the expected code %s", (code) => {
+    expect(isUnexpectedAuthError(errorWithCode(code))).toBe(false);
+  });
+
+  test("should return true for an unknown code", () => {
+    expect(isUnexpectedAuthError(errorWithCode("something_else"))).toBe(true);
+  });
+
+  test("should return true when the error has no code", () => {
+    expect(isUnexpectedAuthError(new Error("network"))).toBe(true);
   });
 });
