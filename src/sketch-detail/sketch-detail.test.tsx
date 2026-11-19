@@ -6,9 +6,11 @@ import { SketchCanvas } from "@/sketch-detail/sketch-canvas";
 import { TitleToolbar } from "@/sketch-detail/title-toolbar";
 import { getSketch } from "@/supabase/sketch-crud/getSketch";
 import { createSupabaseServerClient } from "@/supabase/utils/serverClient";
+import { logError } from "@/error-logging";
 
 const validId = "11111111-1111-4111-8111-111111111111";
 
+vi.mock("@/error-logging", () => ({ logError: vi.fn() }));
 vi.mock("next/navigation", () => ({
   notFound: vi.fn(() => {
     throw new Error("NEXT_NOT_FOUND");
@@ -87,6 +89,7 @@ describe("SketchDetail", () => {
 
     expect(screen.getByTestId("sketch-canvas")).toBeInTheDocument();
     expect(vi.mocked(SketchCanvas).mock.calls[0][0]).toEqual({ sketch });
+    expect(logError).not.toHaveBeenCalled();
   });
 
   test("should call notFound without fetching when isSketchId returns false", async () => {
@@ -107,6 +110,7 @@ describe("SketchDetail", () => {
     await expect(SketchDetail({ id: validId })).rejects.toThrow(
       "NEXT_NOT_FOUND",
     );
+    expect(logError).not.toHaveBeenCalled();
   });
 
   test("should render an error message and a link to `sketches` when fetching fails", async () => {
@@ -122,5 +126,15 @@ describe("SketchDetail", () => {
     );
     const link = screen.getByRole("link", { name: "スケッチ一覧へ戻る" });
     expect(link).toHaveAttribute("href", "/sketches");
+  });
+
+  test("should log the error as the feature fetch-sketch when fetching fails", async () => {
+    const error = new Error("test error");
+    vi.mocked(getSketch).mockResolvedValue({ ok: false, error });
+
+    render(await SketchDetail({ id: validId }));
+
+    expect(logError).toHaveBeenCalledOnce();
+    expect(logError).toHaveBeenCalledWith(error, { feature: "fetch-sketch" });
   });
 });

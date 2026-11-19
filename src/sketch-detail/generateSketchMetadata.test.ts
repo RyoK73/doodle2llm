@@ -2,9 +2,11 @@ import { generateSketchMetadata } from "@/sketch-detail/generateSketchMetadata";
 import { isSketchId } from "@/sketch-detail/isSketchId";
 import { getSketch } from "@/supabase/sketch-crud/getSketch";
 import { createSupabaseServerClient } from "@/supabase/utils/serverClient";
+import { logError } from "@/error-logging";
 
 const validId = "11111111-1111-4111-8111-111111111111";
 
+vi.mock("@/error-logging", () => ({ logError: vi.fn() }));
 vi.mock("@/supabase/utils/serverClient", () => ({
   createSupabaseServerClient: vi.fn(),
 }));
@@ -90,13 +92,14 @@ describe("generateSketchMetadata", () => {
   });
 
   describe("when getSketch returns ok: false", () => {
-    test("should return no title without throwing", async () => {
+    test("should return no title without throwing, and leave the logging to SketchDetail", async () => {
       vi.mocked(getSketch).mockResolvedValue({
         ok: false,
         error: new Error("test error"),
       });
 
       await expect(generateSketchMetadata(validId)).resolves.toEqual({});
+      expect(logError).not.toHaveBeenCalled();
     });
   });
 });

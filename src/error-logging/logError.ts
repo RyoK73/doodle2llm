@@ -9,7 +9,14 @@ type ErrorLogFeature =
   | "load-sketch"
   | "restore-history"
   | "copy-image"
-  | "download-image";
+  | "download-image"
+  | "anonymous-sign-in"
+  | "create-sketch"
+  | "sign-out"
+  | "fetch-sketch-list"
+  | "fetch-sketch"
+  | "send-auth-code"
+  | "verify-auth-code";
 
 type LogErrorOptions = {
   feature: ErrorLogFeature;

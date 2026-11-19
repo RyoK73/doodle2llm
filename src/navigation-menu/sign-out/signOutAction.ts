@@ -1,4 +1,5 @@
 "use server";
+import { logError } from "@/error-logging";
 import { signOut } from "@/supabase/auth/signOut";
 import { createSupabaseAnonActionClient } from "@/supabase/utils/anonActionClient";
 import { redirect } from "next/navigation";
@@ -9,7 +10,7 @@ const signOutAction = async (): Promise<SignOutState> => {
   const supabaseClient = await createSupabaseAnonActionClient();
   const result = await signOut(supabaseClient);
   if (!result.ok) {
-    // TODO(#71): Log `result.error` on the server.
+    logError(result.error, { feature: "sign-out" });
     return { error: "サインアウトに失敗しました" };
   }
   redirect("/");

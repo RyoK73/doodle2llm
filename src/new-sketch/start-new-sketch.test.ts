@@ -4,7 +4,9 @@ import { createSupabaseAnonActionClient } from "@/supabase/utils/anonActionClien
 import { getAuthState } from "@/supabase/auth/getAuthState";
 import { signInAnonymouslyWithForwardedIp } from "@/supabase/auth/anonymousSignIn/signInAnonymouslyWithForwardedIp";
 import { upsertSketch } from "@/supabase/sketch-crud/handleDb";
+import { logError } from "@/error-logging";
 
+vi.mock("@/error-logging", () => ({ logError: vi.fn() }));
 vi.mock("next/navigation", () => ({ redirect: vi.fn() }));
 vi.mock("@/supabase/utils/anonActionClient", () => ({
   createSupabaseAnonActionClient: vi.fn(),
@@ -82,6 +84,7 @@ describe("startNewSketch", () => {
       expect.not.objectContaining({ id: expect.anything() }),
     );
     expect(redirect).toHaveBeenCalledWith("/sketches/new-id");
+    expect(logError).not.toHaveBeenCalled();
   });
 
   test("should return an error and not create when signing in fails", async () => {
@@ -98,6 +101,22 @@ describe("startNewSketch", () => {
     expect(redirect).not.toHaveBeenCalled();
   });
 
+  test("should log the error as the feature anonymous-sign-in when signing in fails", async () => {
+    const error = new Error("test error");
+    vi.mocked(getAuthState).mockResolvedValue("signedOut");
+    vi.mocked(signInAnonymouslyWithForwardedIp).mockResolvedValue({
+      ok: false,
+      error,
+    });
+
+    await startNewSketch(null);
+
+    expect(logError).toHaveBeenCalledOnce();
+    expect(logError).toHaveBeenCalledWith(error, {
+      feature: "anonymous-sign-in",
+    });
+  });
+
   test("should return the limit message and not redirect when the sketch limit is reached", async () => {
     vi.mocked(getAuthState).mockResolvedValue("guest");
     vi.mocked(upsertSketch).mockResolvedValue({
@@ -111,6 +130,7 @@ describe("startNewSketch", () => {
 
     expect(state).toEqual({ error: "スケッチの作成上限に達しました" });
     expect(redirect).not.toHaveBeenCalled();
+    expect(logError).not.toHaveBeenCalled();
   });
 
   test("should return an error and not redirect when creating fails", async () => {
@@ -124,5 +144,16 @@ describe("startNewSketch", () => {
 
     expect(state).toEqual({ error: expect.any(String) });
     expect(redirect).not.toHaveBeenCalled();
+  });
+
+  test("should log the error as the feature create-sketch when creating fails for a reason other than the limit", async () => {
+    const error = new Error("test error");
+    vi.mocked(getAuthState).mockResolvedValue("guest");
+    vi.mocked(upsertSketch).mockResolvedValue({ ok: false, error });
+
+    await startNewSketch(null);
+
+    expect(logError).toHaveBeenCalledOnce();
+    expect(logError).toHaveBeenCalledWith(error, { feature: "create-sketch" });
   });
 });

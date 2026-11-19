@@ -7,12 +7,14 @@ import {
 import { createSupabaseServerClient } from "@/supabase/utils/serverClient";
 import { getSketchList } from "@/supabase/sketch-crud/getSketchList";
 import { LocalTime } from "@/design-system/local-time";
+import { logError } from "@/error-logging";
 
 const SketchList = async () => {
   const supabaseClient = await createSupabaseServerClient();
   const result = await getSketchList(supabaseClient);
 
   if (!result.ok) {
+    logError(result.error, { feature: "fetch-sketch-list" });
     return <p role="alert">スケッチ一覧の取得に失敗しました</p>;
   }
 
