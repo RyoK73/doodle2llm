@@ -63,7 +63,7 @@ Input of TitleToolbar
   - `useSaveMeta` calls it after a save succeeds (after it updates the last saved value).
     It is not called when the save is skipped because the value is the same, nor when the save fails.
   - Neither awaits it.
-    The save has already succeeded, so a failure of the call is ignored.
+    The save has already succeeded, so a failure of the call is only sent to Sentry as a warning.
     It is not part of the serialization of saves either.
 - `handleDb`
   - Every function returns `Result<T>` (`src/utils/utility.types.ts`).
