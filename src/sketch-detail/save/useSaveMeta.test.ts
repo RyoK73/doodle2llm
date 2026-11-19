@@ -3,7 +3,9 @@ import { useSaveMeta } from "@/sketch-detail/save/useSaveMeta";
 import { updateSketchMeta } from "@/supabase/sketch-crud/updateSketchMeta";
 import { toast } from "@/design-system/toast";
 import { revalidateSketchList } from "@/sketch-detail/save/revalidateSketchList";
+import { logError } from "@/error-logging";
 
+vi.mock("@/error-logging", () => ({ logError: vi.fn() }));
 vi.mock("@/supabase/sketch-crud/updateSketchMeta", () => ({
   updateSketchMeta: vi.fn(),
 }));
@@ -144,13 +146,14 @@ describe("useSaveMeta", () => {
     expect(updateSketchMeta).not.toHaveBeenCalled();
   });
 
-  it("should not show a toast when the save succeeds", async () => {
+  it("should neither show a toast nor log an error when the save succeeds", async () => {
     const { result } = renderUseSaveMeta();
 
     act(() => result.current.setTitle("new title"));
     await advance(SAVE_DELAY);
 
     expect(toast.add).not.toHaveBeenCalled();
+    expect(logError).not.toHaveBeenCalled();
   });
 
   describe("revalidateSketchList", () => {
@@ -210,13 +213,42 @@ describe("useSaveMeta", () => {
       expect(toast.add).not.toHaveBeenCalled();
       expect(updateSketchMeta).toHaveBeenCalledOnce();
     });
+
+    it("should log the rejected error as a warning of the feature revalidate-sketch-list when revalidateSketchList rejects", async () => {
+      const revalidateError = new Error("revalidate failed");
+      vi.mocked(revalidateSketchList).mockRejectedValue(revalidateError);
+      const { result } = renderUseSaveMeta();
+
+      act(() => result.current.setTitle("new title"));
+      await advance(SAVE_DELAY);
+
+      expect(logError).toHaveBeenCalledOnce();
+      expect(logError).toHaveBeenCalledWith(revalidateError, {
+        feature: "revalidate-sketch-list",
+        level: "warning",
+      });
+    });
   });
 
   describe("when the save fails", () => {
+    const saveError = new Error("test error");
+
     beforeEach(() => {
       vi.mocked(updateSketchMeta).mockResolvedValue({
         ok: false,
-        error: new Error("test error"),
+        error: saveError,
+      });
+    });
+
+    it("should log the error of the result as the feature save-sketch-meta", async () => {
+      const { result } = renderUseSaveMeta();
+
+      act(() => result.current.setTitle("new title"));
+      await advance(SAVE_DELAY);
+
+      expect(logError).toHaveBeenCalledOnce();
+      expect(logError).toHaveBeenCalledWith(saveError, {
+        feature: "save-sketch-meta",
       });
     });
 

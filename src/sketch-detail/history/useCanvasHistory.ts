@@ -1,6 +1,7 @@
 import type { Canvas } from "fabric";
 import { RefObject, useEffect, useRef, useState } from "react";
 import { toast } from "@/design-system/toast";
+import { logError } from "@/error-logging";
 import { CanvasJson, useHistory } from "@/sketch-detail/history/useHistory";
 
 const RESTORE_ERROR_TOAST_ID = "restore-history-error";
@@ -85,8 +86,8 @@ const useCanvasHistory = (
         if (!canvas.backgroundColor) canvas.backgroundColor = backgroundColor;
         canvas.requestRenderAll();
       })
-      .catch(() => {
-        // TODO(#70): Log the error according to the policy decided in #70.
+      .catch((error: unknown) => {
+        logError(error, { feature: "restore-history" });
         toast.add({
           type: "error",
           title: "履歴の復元に失敗しました",

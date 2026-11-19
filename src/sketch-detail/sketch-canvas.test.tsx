@@ -4,10 +4,12 @@ import * as fabric from "fabric";
 import { SketchCanvas } from "@/sketch-detail/sketch-canvas";
 import { saveToDb } from "@/sketch-detail/save/saveToDb";
 import { toast } from "@/design-system/toast";
+import { logError } from "@/error-logging";
 import type { GetSketch } from "@/supabase/sketch-crud/getSketch.types";
 
 vi.mock("@/sketch-detail/save/saveToDb", () => ({ saveToDb: vi.fn() }));
 vi.mock("@/design-system/toast", () => ({ toast: { add: vi.fn() } }));
+vi.mock("@/error-logging", () => ({ logError: vi.fn() }));
 
 const sketchId = "11111111-1111-4111-8111-111111111111";
 const rectJson = {
@@ -54,12 +56,13 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-it("should enable the shape buttons after the sketch is loaded", async () => {
+it("should enable the shape buttons after the sketch is loaded, without logging an error", async () => {
   render(<SketchCanvas sketch={createSketch()} />);
 
   expect(getAddShapeButton("四角形")).toBeDisabled();
   await waitFor(() => expect(getAddShapeButton("四角形")).toBeEnabled());
   expect(getAddShapeButton("円")).toBeEnabled();
+  expect(logError).not.toHaveBeenCalled();
 });
 
 it("should add a shape and save the sketch when a shape button is clicked", async () => {
@@ -129,6 +132,21 @@ it("should show an error toast with a fixed id when saving fails", async () => {
   );
 });
 
+it("should log the error of the failed save once as the feature save-sketch, and not log it again on a re-render", async () => {
+  const error = new Error("internal detail");
+  vi.mocked(saveToDb).mockResolvedValue({ ok: false, error });
+  const user = userEvent.setup();
+  const { rerender } = render(<SketchCanvas sketch={createSketch()} />);
+  await waitFor(() => expect(getAddShapeButton("円")).toBeEnabled());
+
+  await user.click(getAddShapeButton("円"));
+
+  await waitFor(() => expect(logError).toHaveBeenCalledOnce());
+  expect(logError).toHaveBeenCalledWith(error, { feature: "save-sketch" });
+  rerender(<SketchCanvas sketch={createSketch()} />);
+  expect(logError).toHaveBeenCalledOnce();
+});
+
 it("should show an alert and a link without the buttons when loading fails", async () => {
   vi.spyOn(fabric.Canvas.prototype, "loadFromJSON").mockRejectedValue(
     new Error("test load error"),
@@ -143,4 +161,16 @@ it("should show an alert and a link without the buttons when loading fails", asy
     screen.getByRole("link", { name: "スケッチ一覧へ戻る" }),
   ).toHaveAttribute("href", "/sketches");
   expect(screen.queryByRole("button")).not.toBeInTheDocument();
+});
+
+it("should log the load error once as the feature load-sketch when loading fails, and not log it again on a re-render", async () => {
+  const error = new Error("test load error");
+  vi.spyOn(fabric.Canvas.prototype, "loadFromJSON").mockRejectedValue(error);
+
+  const { rerender } = render(<SketchCanvas sketch={createSketch()} />);
+
+  await waitFor(() => expect(logError).toHaveBeenCalledOnce());
+  expect(logError).toHaveBeenCalledWith(error, { feature: "load-sketch" });
+  rerender(<SketchCanvas sketch={createSketch()} />);
+  expect(logError).toHaveBeenCalledOnce();
 });

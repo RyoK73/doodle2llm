@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { toast } from "@/design-system/toast";
+import { logError } from "@/error-logging";
 import { ControlToolbar, ZoomControls } from "@/sketch-detail/control-toolbar";
 import { ShapeNavigation } from "@/sketch-detail/control-toolbar/shape-navigation";
 import { SketchError } from "@/sketch-detail/sketch-error";
@@ -78,7 +79,7 @@ const SketchCanvas = ({ sketch }: { sketch: GetSketch }) => {
 
   useEffect(() => {
     if (err) {
-      // TODO(#70): Log `err` according to the policy decided in #70.
+      logError(err, { feature: "save-sketch" });
       toast.add({
         type: "error",
         title: "保存に失敗しました",
@@ -86,6 +87,10 @@ const SketchCanvas = ({ sketch }: { sketch: GetSketch }) => {
       });
     }
   }, [err]);
+
+  useEffect(() => {
+    if (loadError) logError(loadError, { feature: "load-sketch" });
+  }, [loadError]);
 
   // Do not edit when the canvas is not restored, or the next auto-save would overwrite the sketch.
   if (loadError) {

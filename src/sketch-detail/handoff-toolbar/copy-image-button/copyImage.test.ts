@@ -1,7 +1,9 @@
 import { toast } from "@/design-system/toast";
+import { logError } from "@/error-logging";
 import { copyImage } from "@/sketch-detail/handoff-toolbar/copy-image-button/copyImage";
 
 vi.mock("@/design-system/toast", () => ({ toast: { add: vi.fn() } }));
+vi.mock("@/error-logging", () => ({ logError: vi.fn() }));
 
 const PNG = new Blob(["png"], { type: "image/png" });
 
@@ -37,16 +39,20 @@ it("should write the PNG promise as a `ClipboardItem` and notify the success", a
   expect(toast.add).toHaveBeenCalledWith(
     expect.objectContaining({ type: "success", title: "コピーしました" }),
   );
+  expect(logError).not.toHaveBeenCalled();
 });
 
-it("should notify the error when the browser rejects the write in clipboard", async () => {
-  stubClipboard(vi.fn().mockRejectedValue(new Error("denied")));
+it("should notify the error and log the rejected error when the browser rejects the write in clipboard", async () => {
+  const error = new Error("denied");
+  stubClipboard(vi.fn().mockRejectedValue(error));
 
   await expect(copyImage(Promise.resolve(PNG))).resolves.toBeUndefined();
 
   expect(toast.add).toHaveBeenCalledWith(
     expect.objectContaining({ type: "error" }),
   );
+  expect(logError).toHaveBeenCalledOnce();
+  expect(logError).toHaveBeenCalledWith(error, { feature: "copy-image" });
 });
 
 it("should notify the error without throwing when the browser is missing the clipboard API", async () => {

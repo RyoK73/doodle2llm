@@ -1,8 +1,11 @@
 import { act, renderHook } from "@testing-library/react";
 import type { Canvas } from "fabric";
 import { toast } from "@/design-system/toast";
+import { logError } from "@/error-logging";
 import type { CanvasJson } from "@/sketch-detail/history/useHistory";
 import { useCanvasHistory } from "@/sketch-detail/history/useCanvasHistory";
+
+vi.mock("@/error-logging", () => ({ logError: vi.fn() }));
 
 type Handler = () => void;
 
@@ -84,6 +87,10 @@ const holdRestoring = (fakeCanvas: ReturnType<typeof createFakeCanvas>) => {
   );
   return () => finish();
 };
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -234,6 +241,7 @@ describe("useCanvasHistory", () => {
 
       expect(fakeCanvas.canvas.loadFromJSON).toHaveBeenCalledTimes(1);
       expect(loadedJson(fakeCanvas, 0)).toEqual(json.initial);
+      expect(logError).not.toHaveBeenCalled();
     });
 
     it("should call `loadFromJSON` with the next value on redo", async () => {
@@ -279,11 +287,12 @@ describe("useCanvasHistory", () => {
       expect(fakeCanvas.canvas.loadFromJSON).not.toHaveBeenCalled();
     });
 
-    it("should stop restoring and show an error toast when `loadFromJSON` fails", async () => {
+    it("should stop restoring, show an error toast and log the error when `loadFromJSON` fails", async () => {
       const add = vi.spyOn(toast, "add").mockReturnValue("toast-id");
+      const error = new Error("failed");
       const { fakeCanvas, result } = setup();
       await changeCanvas(fakeCanvas, json.first, "object:added");
-      fakeCanvas.canvas.loadFromJSON.mockRejectedValueOnce(new Error("failed"));
+      fakeCanvas.canvas.loadFromJSON.mockRejectedValueOnce(error);
 
       await act(async () => result.current.undo());
 
@@ -298,6 +307,10 @@ describe("useCanvasHistory", () => {
       expect(result.current.canRedo).toBe(false);
       // The rollback must not restore the canvas again.
       expect(fakeCanvas.canvas.loadFromJSON).toHaveBeenCalledTimes(1);
+      expect(logError).toHaveBeenCalledOnce();
+      expect(logError).toHaveBeenCalledWith(error, {
+        feature: "restore-history",
+      });
     });
 
     it("should put the history position back when `loadFromJSON` fails on redo", async () => {

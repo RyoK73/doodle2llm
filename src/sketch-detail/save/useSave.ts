@@ -4,6 +4,7 @@ import { saveToDb } from "@/sketch-detail/save/saveToDb";
 import { SketchInfo, CanvasFrame } from "@/sketch-detail/save/saveToDb.types";
 import { revalidateSketchList } from "@/sketch-detail/save/revalidateSketchList";
 import pDebounce from "p-debounce";
+import { logError } from "@/error-logging";
 
 const SAVE_DELAY: number = 250;
 
@@ -11,9 +12,10 @@ const SAVE_DELAY: number = 250;
 const saveToDbAndRevalidate = async (...args: Parameters<typeof saveToDb>) => {
   const saveResult = await saveToDb(...args);
   if (saveResult.ok) {
-    // Not awaited. The save already succeeded, so a failure here is ignored.
-    // TODO(#70): Log the failure according to the policy decided in #70.
-    void revalidateSketchList().catch(() => {});
+    // Not awaited. The save already succeeded, so a failure here is only logged as a warning.
+    void revalidateSketchList().catch((error: unknown) =>
+      logError(error, { feature: "revalidate-sketch-list", level: "warning" }),
+    );
   }
   return saveResult;
 };
