@@ -196,8 +196,10 @@ FONTCONFIG_FILE=<TTFのディレクトリを指定した設定ファイル> \
   rsvg-convert -w 1200 -h 630 assets/opengraph-image.svg -o src/app/opengraph-image.png
 ```
 
-- SVGの文言は、`layout.tsx`の`SITE_NAME`、`SITE_DESCRIPTION`と同じ値です。
+- SVGの文言は、`layout.tsx`の`SITE_NAME`と同じ値です。
   どちらかを変えたら、もう一方も合わせます。
+- 説明文(`SITE_DESCRIPTION`)は、画像に載せません。
+  Webで見たときに文字が小さく、読めないためです。
 - アイコンの図柄は、`src/app/icon.svg`を拡大したものです。
 - アイコン以外の色は、`DESIGN.md`のトークンの値です。
 

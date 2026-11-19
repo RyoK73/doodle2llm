@@ -158,10 +158,10 @@
 
 - 画像のURLは、`metadataBase`を使った絶対URLで出力されます。
   幅と高さ(`og:image:width`、`og:image:height`)も、自動で出力されます。
-- `layout.tsx`の`openGraph`と`twitter`には、`images`を書きません。
+- `layout.tsx`の`openGraph`と`twitter`には、`images`の設定を記述しません。
   `twitter:card`は、`layout.tsx`で`summary_large_image`を指定します。
 - `src/app/opengraph-image.alt.txt`は、`og:image:alt`と`twitter:image:alt`になります。
-  `SITE_NAME`、`SITE_DESCRIPTION`と同じ、サイト名と説明を書いています。
+  `SITE_NAME`と同じ、サイト名を記述しています。
 - 拡張子が`.png`のパスは、`src/proxy.ts`のmatcherから除外されます。
   そのため、画像の取得で認証セッションの更新は走りません。
 - 画像の作り方は[概要](./overview.ja.md)の「共有画像」を参照してください。
