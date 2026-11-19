@@ -43,3 +43,6 @@ next-env.d.ts
 
 # sandbox
 /**/sandbox
+
+# Sentry Config File
+.env.sentry-build-plugin
