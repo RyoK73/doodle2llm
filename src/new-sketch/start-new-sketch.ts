@@ -1,6 +1,7 @@
 "use server";
 import { redirect } from "next/navigation";
 import { version } from "fabric";
+import { logError } from "@/error-logging";
 import { createSupabaseAnonActionClient } from "@/supabase/utils/anonActionClient";
 import { getAuthState } from "@/supabase/auth/getAuthState";
 import { signInAnonymouslyWithForwardedIp } from "@/supabase/auth/anonymousSignIn/signInAnonymouslyWithForwardedIp";
@@ -22,7 +23,7 @@ const startNewSketch = async (
     // The sign-in uses its own client, so this client does not know the new session.
     const signInResult = await signInAnonymouslyWithForwardedIp();
     if (!signInResult.ok) {
-      // TODO(#71): Log `signInResult.error` on the server.
+      logError(signInResult.error, { feature: "anonymous-sign-in" });
       return { error: "サインインに失敗しました" };
     }
     // Create the client again, so that it reads the session cookies written by the sign-in.
@@ -39,7 +40,7 @@ const startNewSketch = async (
     if (isSketchLimitError(upsertResult.error)) {
       return { error: "スケッチの作成上限に達しました" };
     }
-    // TODO(#71): Log `upsertResult.error` on the server.
+    logError(upsertResult.error, { feature: "create-sketch" });
     return { error: "スケッチの作成に失敗しました" };
   }
 

@@ -3,9 +3,11 @@ import { SketchList } from "@/sketch-list/sketch-list";
 import { getSketchList } from "@/supabase/sketch-crud/getSketchList";
 import { createSupabaseServerClient } from "@/supabase/utils/serverClient";
 import { dateTimeTestHelper } from "@/sketch-list/testUtility";
+import { logError } from "@/error-logging";
 
 const { generateTestDateTime } = dateTimeTestHelper();
 
+vi.mock("@/error-logging", () => ({ logError: vi.fn() }));
 vi.mock("@/supabase/utils/serverClient", () => ({
   createSupabaseServerClient: vi.fn(),
 }));
@@ -57,6 +59,7 @@ describe("SketchList", () => {
     expect(links[1]).toHaveTextContent(
       generateTestDateTime(new Date(olderSketch.updated_at)),
     );
+    expect(logError).not.toHaveBeenCalled();
   });
 
   test("should link each sketch to /sketches/[id]", async () => {
@@ -106,6 +109,7 @@ describe("SketchList", () => {
 
     expect(screen.getByText("スケッチがまだありません")).toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    expect(logError).not.toHaveBeenCalled();
   });
 
   test("should render an error message when fetching fails", async () => {
@@ -119,5 +123,17 @@ describe("SketchList", () => {
     expect(screen.getByRole("alert")).toHaveTextContent(
       "スケッチ一覧の取得に失敗しました",
     );
+  });
+
+  test("should log the error as the feature fetch-sketch-list when fetching fails", async () => {
+    const error = new Error("test error");
+    vi.mocked(getSketchList).mockResolvedValue({ ok: false, error });
+
+    await renderSketchList();
+
+    expect(logError).toHaveBeenCalledOnce();
+    expect(logError).toHaveBeenCalledWith(error, {
+      feature: "fetch-sketch-list",
+    });
   });
 });

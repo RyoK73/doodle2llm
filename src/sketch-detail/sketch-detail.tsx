@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { logError } from "@/error-logging";
 import { getSketchCached } from "@/sketch-detail/getSketchCached";
 import { isSketchId } from "@/sketch-detail/isSketchId";
 import { SketchEditor } from "@/sketch-detail/sketch-editor";
@@ -10,6 +11,7 @@ const SketchDetail = async ({ id }: { id: string }) => {
   const result = await getSketchCached(id);
 
   if (!result.ok) {
+    logError(result.error, { feature: "fetch-sketch" });
     return <SketchError message="スケッチの取得に失敗しました" />;
   }
 
