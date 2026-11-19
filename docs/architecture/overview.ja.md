@@ -16,6 +16,7 @@
 | UI部品(tooltip) | @base-ui/react             |
 | テーマ切り替え  | next-themes                |
 | Web分析         | @vercel/analytics          |
+| エラー監視      | Sentry(@sentry/nextjs)     |
 
 正確なバージョンは`package.json`を参照してください。
 fabric.jsだけは、`^`を付けずにバージョンを固定しています。
@@ -30,7 +31,7 @@ fabric.jsだけは、`^`を付けずにバージョンを固定しています�
 | ------------------------------- | ------------------------------------------------------------ |
 | `src/app/`                      | ルーティング専用                                             |
 | `src/proxy.ts`                  | Next.jsのproxy。リクエストごとに認証セッションを更新します。 |
-| `src/instrumentation-client.ts` | ブラウザ側の初期化。BotIDで保護するパスを登録します。        |
+| `src/instrumentation-client.ts` | ブラウザ側の初期化。BotIDのパスの登録と、Sentryの開始。      |
 | `src/analytics/`                | Web Analytics(一部ページを除外する条件つき)                  |
 | `src/auth-form/`                | サインインとゲスト登録のフォーム                             |
 | `src/landing-page/`             | ランディングページの表示(認証状態ごとのボタン)               |
@@ -41,6 +42,7 @@ fabric.jsだけは、`^`を付けずにバージョンを固定しています�
 | `src/sitemap/`                  | サイトマップのエントリの組み立て(`buildSitemap`)             |
 | `src/design-system/`            | 汎用UI部品                                                   |
 | `src/error-pages/`              | 404とエラー画面の共通部品                                    |
+| `src/error-logging/`            | ブラウザで起きたエラーのSentryへの送信                       |
 | `src/supabase/`                 | Supabaseのクライアント、認証、CRUD、DBテスト                 |
 | `src/utils/`                    | 共通の型と、サイトURLを返す関数(`getSiteUrl`)                |
 | `src/dev-scripts/`              | 開発用スクリプト                                             |
@@ -128,6 +130,32 @@ fabric.jsだけは、`^`を付けずにバージョンを固定しています�
 `not-found.tsx`の文言とリンク先は、`src/app/`の各ファイルに書きます。
 エラー画面の文言は`UniversalErrorPage`に書き、`error.tsx`はリンク先とボタンの文言だけを渡します。
 詳細は[ルーティング](./routing.ja.md)を参照してください。
+
+## エラーログ(`src/error-logging/`)
+
+コードが値として受け取るか、`catch`で受け取り、メッセージの表示などで自分で処理した失敗を、`logError`でSentryに送ります。
+`logError(error, { feature, level })`は`Sentry.captureException`を呼びます。
+ブラウザ(保存、読み込み、履歴の復元、画像のコピーとダウンロード、サインインフォームのコードの送信と検証)と、サーバー(スケッチの新規作成、匿名サインイン、サインアウト、スケッチの取得)で使います。
+
+- `feature`は失敗した操作です。イベントのtag `feature`として付けます。
+  値は`save-sketch`、`save-sketch-meta`、`revalidate-sketch-list`、`load-sketch`、`restore-history`、`copy-image`、`download-image`、`anonymous-sign-in`、`create-sketch`、`sign-out`、`fetch-sketch-list`、`fetch-sketch`、`send-auth-code`、`verify-auth-code`です。
+- `level`の既定は`"error"`です。`revalidateSketchList`の失敗だけは、保存がすでに成功しているため、`"warning"`で送ります。
+- `Error`でない値は、`Error`に包みます。元の値は`cause`に残します。
+- 想定内の失敗は送りません。対象は、スケッチが見つからない場合(404)、スケッチ数の上限、入力の誤り、サインインフォームの想定内のエラーです([認証](./auth.ja.md)を参照)。
+- `generateSketchMetadata`は、スケッチの取得の失敗を記録しません。`getSketchCached`が共有する同じ結果を、`SketchDetail`が記録するためです。
+
+Sentryは、実行環境ごとに設定します。
+
+| 実行環境 | ファイル                        |
+| -------- | ------------------------------- |
+| ブラウザ | `src/instrumentation-client.ts` |
+| サーバー | `sentry.server.config.ts`       |
+| エッジ   | `sentry.edge.config.ts`         |
+
+サーバーとエッジの設定は、`src/instrumentation.ts`から読み込みます。
+`src/app/global-error.tsx`は、描画中に起きたエラーを送ります。
+ブラウザは、本番ビルドのときだけ送信します(`enabled: process.env.NODE_ENV === "production"`)。
+`dataCollection`で、すべての実行環境について、ユーザー情報とリクエスト本文の収集を止めています。
 
 ## サインインとゲスト登録(`src/auth-form/`)
 

@@ -92,6 +92,8 @@ It gets the auth state with `getAuthState` and passes whether it is a `guest` to
 | `validation_failed`, etc.    | The email format is invalid                        | Asks to check the format                       |
 | Others                       | Such as a network failure                          | Asks to try again later                        |
 
+- Only the error of `Others` is sent to Sentry (`isUnexpectedAuthError`), as the feature `send-auth-code` or `verify-auth-code`.
+  The other codes are errors that the user can fix by changing the input, so they are not logged.
 - `email_exists` reveals whether an email is registered.
   Only the guest registration path can tell whether an email is registered.
   This is accepted.

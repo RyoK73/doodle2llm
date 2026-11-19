@@ -16,6 +16,7 @@
 | UI parts (tooltip) | @base-ui/react              |
 | Theme switching    | next-themes                 |
 | Web Analytics      | @vercel/analytics           |
+| Error monitoring   | Sentry (@sentry/nextjs)     |
 
 Exact versions are in `package.json`.
 Only fabric.js is pinned to an exact version, without `^`.
@@ -30,7 +31,7 @@ See [Directory structure](../rules/directory-structure.en.md) for the rule.
 | ------------------------------- | ---------------------------------------------------------------- |
 | `src/app/`                      | Routing only                                                     |
 | `src/proxy.ts`                  | Next.js proxy. Refreshes the auth session on each request        |
-| `src/instrumentation-client.ts` | Client-side setup. Registers the paths that BotID protects       |
+| `src/instrumentation-client.ts` | Client-side setup. Registers the BotID paths and starts Sentry   |
 | `src/analytics/`                | Web Analytics (with a rule to exclude some pages)                |
 | `src/auth-form/`                | The form for sign-in and guest registration                      |
 | `src/landing-page/`             | Showing the landing page (buttons by auth state)                 |
@@ -41,6 +42,7 @@ See [Directory structure](../rules/directory-structure.en.md) for the rule.
 | `src/sketch-list/`              | Showing the sketch list (Server and Client Components)           |
 | `src/sitemap/`                  | Building the sitemap entries (`buildSitemap`)                    |
 | `src/error-pages/`              | Shared parts for the 404 and error pages                         |
+| `src/error-logging/`            | Sending the errors that occur in the browser to Sentry           |
 | `src/supabase/`                 | Supabase clients, auth, CRUD and DB tests                        |
 | `src/utils/`                    | Shared types and the function for the site URL (`getSiteUrl`)    |
 | `src/dev-scripts/`              | Scripts for development                                          |
@@ -128,6 +130,32 @@ It uses `useSyncExternalStore` to avoid a hydration mismatch.
 The wording and the link targets of `not-found.tsx` are written in each file in `src/app/`.
 The wording of the error pages is written in `UniversalErrorPage`, and `error.tsx` passes only the link target and the button text.
 See [Routing](./routing.en.md) for details.
+
+## Error logging (`src/error-logging/`)
+
+Failures that the code receives as a value or catches, and handles by showing a message, are sent to Sentry with `logError`.
+`logError(error, { feature, level })` calls `Sentry.captureException`.
+It is used in the browser (saving, loading, restoring the history, copying and downloading the image, and sending and verifying the code of the sign-in form) and on the server (creating a sketch, signing in anonymously, signing out and fetching the sketches).
+
+- `feature` is the operation that failed. It is attached to the event as the tag `feature`.
+  The values are `save-sketch`, `save-sketch-meta`, `revalidate-sketch-list`, `load-sketch`, `restore-history`, `copy-image`, `download-image`, `anonymous-sign-in`, `create-sketch`, `sign-out`, `fetch-sketch-list`, `fetch-sketch`, `send-auth-code` and `verify-auth-code`.
+- `level` is `"error"` by default. Only the failure of `revalidateSketchList` is sent as `"warning"`, because the save has already succeeded.
+- A value that is not an `Error` is wrapped in an `Error`. The original value is kept as `cause`.
+- Expected failures are not sent: a sketch that is not found (404), the sketch count limit, an invalid input, and an expected error of the sign-in form (see [Authentication](./auth.en.md)).
+- `generateSketchMetadata` does not log a failure to fetch the sketch, because `SketchDetail` logs the same result, which `getSketchCached` shares.
+
+Sentry is set up in each runtime.
+
+| Runtime | File                            |
+| ------- | ------------------------------- |
+| Browser | `src/instrumentation-client.ts` |
+| Server  | `sentry.server.config.ts`       |
+| Edge    | `sentry.edge.config.ts`         |
+
+The server and the edge configs are loaded from `src/instrumentation.ts`.
+`src/app/global-error.tsx` sends the errors that occur while rendering.
+The browser sends events only from the production build (`enabled: process.env.NODE_ENV === "production"`).
+`dataCollection` turns off the collection of user information and request bodies in all runtimes.
 
 ## Sign-in and guest registration (`src/auth-form/`)
 
