@@ -12,7 +12,12 @@ import {
   verifyOTP,
   convertAnonymousUserToPermanentUser,
 } from "@/supabase/auth/signIn";
-import { toAuthErrorInfo, type AuthErrorInfo } from "@/auth-form/auth-error";
+import {
+  isUnexpectedAuthError,
+  toAuthErrorInfo,
+  type AuthErrorInfo,
+} from "@/auth-form/auth-error";
+import { logError } from "@/error-logging";
 
 type AuthFormProps = {
   mode: "signin" | "signup";
@@ -40,7 +45,13 @@ const AuthForm = ({ mode, isGuest }: AuthFormProps) => {
       ? await convertAnonymousUserToPermanentUser(supabaseClient, email)
       : await signInWithOTP(supabaseClient, email);
 
-    return result.ok ? null : toAuthErrorInfo(result.error);
+    if (result.ok) return null;
+
+    // Log only an unexpected error. The others, such as a wrong email, are told to the user as they are.
+    if (isUnexpectedAuthError(result.error)) {
+      logError(result.error, { feature: "send-auth-code" });
+    }
+    return toAuthErrorInfo(result.error);
   };
 
   // The form is reset after the action, so every returned state keeps `email` to restore the field.
@@ -69,8 +80,12 @@ const AuthForm = ({ mode, isGuest }: AuthFormProps) => {
           convertsGuest ? "email_change" : "email",
         );
 
-        if (!result.ok)
+        if (!result.ok) {
+          if (isUnexpectedAuthError(result.error)) {
+            logError(result.error, { feature: "verify-auth-code" });
+          }
           return { ...prev, error: toAuthErrorInfo(result.error) };
+        }
         router.push("/sketches");
         router.refresh();
         return { ...prev, error: null };

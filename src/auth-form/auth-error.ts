@@ -10,6 +10,12 @@ const getErrorCode = (error: Error): string | undefined => {
   return typeof error.code === "string" ? error.code : undefined;
 };
 
+// The info for an error that is not one of the expected codes below, such as a network failure.
+const UNEXPECTED_AUTH_ERROR_INFO: AuthErrorInfo = {
+  message: "処理に失敗しました。時間をおいてもう一度お試しください。",
+  suggestSignIn: false,
+};
+
 const toAuthErrorInfo = (error: Error): AuthErrorInfo => {
   switch (getErrorCode(error)) {
     case "email_exists":
@@ -37,12 +43,13 @@ const toAuthErrorInfo = (error: Error): AuthErrorInfo => {
         suggestSignIn: false,
       };
     default:
-      return {
-        message: "処理に失敗しました。時間をおいてもう一度お試しください。",
-        suggestSignIn: false,
-      };
+      return UNEXPECTED_AUTH_ERROR_INFO;
   }
 };
 
-export { toAuthErrorInfo };
+// `isUnexpectedAuthError` returns true for an error that the user cannot fix by changing the input, so that it is worth logging.
+const isUnexpectedAuthError = (error: Error): boolean =>
+  toAuthErrorInfo(error) === UNEXPECTED_AUTH_ERROR_INFO;
+
+export { toAuthErrorInfo, isUnexpectedAuthError };
 export type { AuthErrorInfo };
