@@ -1,7 +1,9 @@
 import { toast } from "@/design-system/toast";
+import { logError } from "@/error-logging";
 import { downloadImage } from "@/sketch-detail/handoff-toolbar/download-image-button/downloadImage";
 
 vi.mock("@/design-system/toast", () => ({ toast: { add: vi.fn() } }));
+vi.mock("@/error-logging", () => ({ logError: vi.fn() }));
 
 const NOW = new Date(2026, 10, 6, 14, 30, 25);
 const PNG = new Blob(["png"], { type: "image/png" });
@@ -40,6 +42,7 @@ it("should save the PNG with the built file name and notify the success", async 
       title: "ダウンロードしました",
     }),
   );
+  expect(logError).not.toHaveBeenCalled();
 });
 
 it("should neither make the PNG nor save it when the title is empty", async () => {
@@ -58,6 +61,7 @@ it("should neither make the PNG nor save it when the title is empty", async () =
       title: "タイトルが空のため、ダウンロードできません",
     }),
   );
+  expect(logError).not.toHaveBeenCalled();
 });
 
 it("should neither make the PNG nor save it when the title has only forbidden characters", async () => {
@@ -77,10 +81,12 @@ it("should neither make the PNG nor save it when the title has only forbidden ch
         "タイトルにファイル名として使える文字がないため、ダウンロードできません",
     }),
   );
+  expect(logError).not.toHaveBeenCalled();
 });
 
-it("should notify the error and not save when the PNG cannot be made", async () => {
-  const getBlob = vi.fn().mockRejectedValue(new Error("export failed"));
+it("should notify the error, log the error and not save when the PNG cannot be made", async () => {
+  const error = new Error("export failed");
+  const getBlob = vi.fn().mockRejectedValue(error);
 
   await expect(
     downloadImage({ title: "sample", now: NOW, getBlob }),
@@ -96,6 +102,8 @@ it("should notify the error and not save when the PNG cannot be made", async () 
   expect(toast.add).not.toHaveBeenCalledWith(
     expect.objectContaining({ type: "success" }),
   );
+  expect(logError).toHaveBeenCalledOnce();
+  expect(logError).toHaveBeenCalledWith(error, { feature: "download-image" });
 });
 describe("revokeObjectUrl", () => {
   it("should not revoke the object URL right after saving", async () => {
@@ -136,9 +144,10 @@ describe("revokeObjectUrl", () => {
     expect(URL.revokeObjectURL).not.toHaveBeenCalled();
   });
 
-  it("should notify the error and revoke the object URL after the delay when the click fails", async () => {
+  it("should notify the error, log the error and revoke the object URL after the delay when the click fails", async () => {
+    const error = new Error("click failed");
     vi.mocked(HTMLAnchorElement.prototype.click).mockImplementationOnce(() => {
-      throw new Error("click failed");
+      throw error;
     });
     const getBlob = vi.fn().mockResolvedValue(PNG);
 
@@ -150,5 +159,7 @@ describe("revokeObjectUrl", () => {
     );
     expect(URL.revokeObjectURL).toHaveBeenCalledTimes(1);
     expect(URL.revokeObjectURL).toHaveBeenCalledWith(OBJECT_URL);
+    expect(logError).toHaveBeenCalledOnce();
+    expect(logError).toHaveBeenCalledWith(error, { feature: "download-image" });
   });
 });

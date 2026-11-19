@@ -4,7 +4,9 @@ import { Canvas, Rect } from "fabric";
 import { saveToDb } from "@/sketch-detail/save/saveToDb";
 import { CanvasFrame } from "@/sketch-detail/save/saveToDb.types";
 import { revalidateSketchList } from "@/sketch-detail/save/revalidateSketchList";
+import { logError } from "@/error-logging";
 
+vi.mock("@/error-logging", () => ({ logError: vi.fn() }));
 vi.mock("@/sketch-detail/save/saveToDb", () => ({
   saveToDb: vi.fn(),
 }));
@@ -299,6 +301,7 @@ describe("useSave", () => {
 
       expect(revalidateSketchList).not.toHaveBeenCalled();
       expect(result.current.err).toEqual(testError);
+      expect(logError).not.toHaveBeenCalled();
     });
 
     it("should not set err and should update the id, even so revalidateSketchList rejects", async () => {
@@ -317,6 +320,22 @@ describe("useSave", () => {
 
       expect(result.current.err).toBeUndefined();
       expect(idRef.current).toBe("returned-id");
+    });
+
+    it("should log the rejected error as a warning of the feature revalidate-sketch-list when revalidateSketchList rejects", async () => {
+      const revalidateError = new Error("revalidate failed");
+      vi.mocked(revalidateSketchList).mockRejectedValue(revalidateError);
+      const { result } = renderUseSave(canvasIdTestRef);
+
+      await act(async () => {
+        await result.current.save();
+      });
+
+      await waitFor(() => expect(logError).toHaveBeenCalledOnce());
+      expect(logError).toHaveBeenCalledWith(revalidateError, {
+        feature: "revalidate-sketch-list",
+        level: "warning",
+      });
     });
 
     it("should be called once when save() is called in a row", async () => {

@@ -1,4 +1,5 @@
 import { toast } from "@/design-system/toast";
+import { logError } from "@/error-logging";
 import {
   buildPngFileName,
   type PngFileNameError,
@@ -49,8 +50,8 @@ const downloadImage = async ({
   try {
     saveBlob(await getBlob(), fileName.value);
     toast.add({ type: "success", title: "ダウンロードしました" });
-  } catch {
-    // TODO(#70): Log the error according to the policy decided in #70.
+  } catch (error) {
+    logError(error, { feature: "download-image" });
     toast.add({ type: "error", title: "ダウンロードに失敗しました" });
   }
 };

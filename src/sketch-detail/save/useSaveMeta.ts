@@ -1,6 +1,7 @@
 import { useState } from "react";
 import pDebounce from "p-debounce";
 import { toast } from "@/design-system/toast";
+import { logError } from "@/error-logging";
 import { revalidateSketchList } from "@/sketch-detail/save/revalidateSketchList";
 import { updateSketchMeta } from "@/supabase/sketch-crud/updateSketchMeta";
 import type { SketchMeta } from "@/supabase/sketch-crud/updateSketchMeta.types";
@@ -44,7 +45,7 @@ const useSaveMeta = ({ sketchId, initial, onSaved }: UseSaveMetaParams) => {
         meta,
       );
       if (!result.ok) {
-        // TODO(#70): Log `result.error` according to the policy decided in #70.
+        logError(result.error, { feature: "save-sketch-meta" });
         toast.add({
           type: "error",
           title: "タイトルと説明の保存に失敗しました",
@@ -53,9 +54,13 @@ const useSaveMeta = ({ sketchId, initial, onSaved }: UseSaveMetaParams) => {
         return { ok: false };
       }
       lastSavedMeta = meta;
-      // Not awaited, so that it does not hold back the next save. The save already succeeded, so a failure here is ignored.
-      // TODO(#70): Log the failure according to the policy decided in #70.
-      void revalidateSketchList().catch(() => {});
+      // Not awaited, so that it does not hold back the next save. The save already succeeded, so a failure here is only logged as a warning.
+      void revalidateSketchList().catch((error: unknown) =>
+        logError(error, {
+          feature: "revalidate-sketch-list",
+          level: "warning",
+        }),
+      );
 
       return { ok: true };
     };
