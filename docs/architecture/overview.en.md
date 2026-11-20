@@ -157,6 +157,14 @@ The server and the edge configs are loaded from `src/instrumentation.ts`.
 The events are sent only from the production build (`enabled: process.env.NODE_ENV === "production"`).
 `dataCollection` turns off the collection of user information and request bodies in all runtimes.
 
+The browser sends events through `/monitoring` of the site itself, by setting `tunnel: "/monitoring"`.
+The server and the edge receive requests to `/monitoring` with `Sentry.serveTunnelIntegration({ path: "/monitoring" })`.
+The `matcher` of `src/proxy.ts` excludes `monitoring`.
+
+At build time, `withSentryConfig` in `next.config.ts` uploads the source maps to Sentry.
+It authenticates with the environment variable `SENTRY_AUTH_TOKEN`.
+See [Environment variables](../setup/environment.en.md) for details.
+
 ## Sign-in and guest registration (`src/auth-form/`)
 
 | File            | Role                                                                                 |

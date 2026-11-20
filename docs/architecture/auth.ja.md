@@ -7,6 +7,7 @@
 
 - `src/proxy.ts`が、リクエストごとに`updateSession`(`src/supabase/auth/proxy.ts`)を実行します。
   - 静的ファイルと画像は`matcher`で除外されます。
+  - Sentryのトンネル(`/monitoring`)も、`matcher`で除外されます。
 - `updateSession`は、Supabaseのサーバークライアントを作成し、Cookieを同期します。
   その後、同じクライアントを`getAuthState`に渡して認証状態を判定します。
 - 認証状態とパスに応じて、次のようにリダイレクトします。

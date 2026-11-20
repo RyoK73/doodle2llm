@@ -157,6 +157,14 @@ Sentryは、実行環境ごとに設定します。
 本番ビルドのときだけ送信されます(`enabled: process.env.NODE_ENV === "production"`)。
 `dataCollection`で、すべての実行環境について、ユーザー情報とリクエスト本文の収集を止めています。
 
+ブラウザのイベントは、`tunnel: "/monitoring"`を指定して、自分のサイトの`/monitoring`経由で送ります。
+サーバーとエッジは、`Sentry.serveTunnelIntegration({ path: "/monitoring" })`で、`/monitoring`へのリクエストを受けます。
+`src/proxy.ts`の`matcher`は、`monitoring`を除外します。
+
+ビルド時には、`next.config.ts`の`withSentryConfig`が、ソースマップをSentryにアップロードします。
+認証には、環境変数`SENTRY_AUTH_TOKEN`を使います。
+詳細は[環境変数](../setup/environment.ja.md)を参照してください。
+
 ## サインインとゲスト登録(`src/auth-form/`)
 
 | ファイル        | 役割                                                                       |
