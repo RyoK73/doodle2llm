@@ -23,10 +23,10 @@ Sentry.init({
     httpBodies: [],
     httpHeaders: { deny: ["forwarded", "-ip", "remote-", "via", "-user"] },
     cookies: {
-      deny: ["forwarded", "x-forwarded-for", "-ip", "remote-", "via", "-user"],
+      deny: ["forwarded", "-ip", "remote-", "via", "-user"],
     },
     urlQueryParams: {
-      deny: ["forwarded", "x-forwarded-for", "-ip", "remote-", "via", "-user"],
+      deny: ["forwarded", "-ip", "remote-", "via", "-user"],
     },
   },
 });
