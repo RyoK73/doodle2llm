@@ -5,7 +5,7 @@
 import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
-  dsn: "https://6fa7eb191d5580f331f45525d5be6ba8@o4512459414437888.ingest.de.sentry.io/4512459417911376",
+  dsn: "https://669c3a2c5b3f8524f60bca41b62d3bd1@o4512456706818048.ingest.de.sentry.io/4512464471851088",
   integrations: [Sentry.serveTunnelIntegration({ path: "/monitoring" })],
 
   enabled: process.env.NODE_ENV === "production",
