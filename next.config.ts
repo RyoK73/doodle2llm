@@ -10,9 +10,9 @@ export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/sourcemaps/uploading/bundler-plugin-options/
 
-  org: "ryok73-56",
+  org: "ryok73",
 
-  project: "sentry-doodle2llm-monitor",
+  project: "doodle2llm",
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
