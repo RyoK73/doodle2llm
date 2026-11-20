@@ -6,7 +6,7 @@ import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
   dsn: "https://6fa7eb191d5580f331f45525d5be6ba8@o4512459414437888.ingest.de.sentry.io/4512459417911376",
-  integrations: [Sentry.serveTunnelIntegration()],
+  integrations: [Sentry.serveTunnelIntegration({ path: "/monitoring" })],
 
   enabled: process.env.NODE_ENV === "production",
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
