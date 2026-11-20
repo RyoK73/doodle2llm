@@ -11,6 +11,7 @@ initBotId({ protect: [{ path: "/", method: "POST" }] });
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 Sentry.init({
   dsn: "https://6fa7eb191d5580f331f45525d5be6ba8@o4512459414437888.ingest.de.sentry.io/4512459417911376",
+  tunnel: true,
 
   // Send events only from the production build, so that errors during development are not sent.
   enabled: process.env.NODE_ENV === "production",
