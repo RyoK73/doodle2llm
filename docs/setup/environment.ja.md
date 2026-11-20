@@ -23,12 +23,12 @@
 | `PROJECTID`                     | `pnpm type:gen`、`pnpm test:remote` | リモートSupabaseのプロジェクトID           |
 | `SUPABASE_ACCESS_TOKEN`         | `pnpm test:remote`                  | Supabase Management APIのアクセストークン  |
 | `SENTRY_AUTH_TOKEN`             | ビルド(`withSentryConfig`)          | ソースマップのアップロード用の認証トークン |
-| `NEXT_PUBLIC_SENTRY_DSN`        | SentryとVercelの連携                | SentryのVercel連携の案内で設定する値       |
-| `SENTRY_ORG`                    | SentryとVercelの連携                | SentryのVercel連携の案内で設定する値       |
-| `SENTRY_PROJECT`                | SentryとVercelの連携                | SentryのVercel連携の案内で設定する値       |
-| `SENTRY_PUBLIC_KEY`             | SentryとVercelの連携                | SentryのVercel連携の案内で設定する値       |
-| `SENTRY_OTLP_TRACES_URL`        | SentryとVercelの連携                | SentryのVercel連携の案内で設定する値       |
-| `SENTRY_VERCEL_LOG_DRAIN_URL`   | SentryとVercelの連携                | SentryのVercel連携の案内で設定する値       |
+| `NEXT_PUBLIC_SENTRY_DSN`        | SentryとVercelの連携                | コードは読まない。Vercel連携の案内の値     |
+| `SENTRY_ORG`                    | SentryとVercelの連携                | コードは読まない。Vercel連携の案内の値     |
+| `SENTRY_PROJECT`                | SentryとVercelの連携                | コードは読まない。Vercel連携の案内の値     |
+| `SENTRY_PUBLIC_KEY`             | SentryとVercelの連携                | コードは読まない。Vercel連携の案内の値     |
+| `SENTRY_OTLP_TRACES_URL`        | SentryとVercelの連携                | コードは読まない。Vercel連携の案内の値     |
+| `SENTRY_VERCEL_LOG_DRAIN_URL`   | SentryとVercelの連携                | コードは読まない。Vercel連携の案内の値     |
 
 - アプリは`NEXT_PUBLIC_SUPABASE_URL`、`NEXT_PUBLIC_SUPABASE_ANON_KEY`、`SUPABASE_SECRET_KEY`をzodで検証します(`src/supabase/utils/env.ts`)。
 - `NEXT_PUBLIC_SITE_URL`は、`src/utils/getSiteUrl.ts`の`getSiteUrl`がzodで検証して返します。
@@ -47,15 +47,15 @@
 - ローカル用の値は、`pnpm db:start`の後に`pnpm db:status`で確認できます。
   `SUPABASE_SECRET_KEY`のローカル用の値は、`sb_secret_`で始まるキーです。
   この値は、匿名サインインを実際のローカルSupabaseに対して行うテストにも必要です。
-- `SENTRY_*`と`NEXT_PUBLIC_SENTRY_DSN`は、現在のコードからは読みません。
-  DSN、`org`、`project`は、`src/instrumentation-client.ts`、`sentry.server.config.ts`、`next.config.ts`に直接書かれています。
+- `SENTRY_AUTH_TOKEN`以外の`SENTRY_*`と、`NEXT_PUBLIC_SENTRY_DSN`は、現在のコードからは読みません。
+  DSNは、`src/instrumentation-client.ts`、`sentry.server.config.ts`、`sentry.edge.config.ts`に直接書かれています。
+  `org`と`project`は、`next.config.ts`に直接書かれています。
   SentryのVercel連携のセットアップで、設定するよう案内されている変数です。
-- `SENTRY_AUTH_TOKEN`は、ビルド時のソースマップのアップロードに使います。
+- `SENTRY_AUTH_TOKEN`は、ビルド時のソースマップのアップロードに使います(`next.config.ts`の`authToken`)。
   `NEXT_PUBLIC_`を付けず、ブラウザに公開しないでください。
   ビルドプラグイン用の`.env.sentry-build-plugin`は、`.gitignore`に追加済みです。
-- ローカルで`next build`と`next start`を実行してSentryを試すときは、上の7変数を`.env.local`に設定します。
-- 本番では、VercelのEnvironment Variablesに、上の7変数を登録します。
-- 上の7変数の値は、VercelのDashboard > Environment Variablesで確認できます。
+- ローカルで`next build`を実行してソースマップのアップロードを試すときは、`SENTRY_AUTH_TOKEN`を`.env.local`に設定します。
+- 本番では、VercelのEnvironment Variablesに、`SENTRY_AUTH_TOKEN`を登録します。
 - 実際の値は絶対にコミットしないでください。
 
 ## 次のステップ
