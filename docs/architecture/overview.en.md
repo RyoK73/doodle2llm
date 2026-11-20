@@ -154,7 +154,7 @@ Sentry is set up in each runtime.
 
 The server and the edge configs are loaded from `src/instrumentation.ts`.
 `src/app/global-error.tsx` sends the errors that occur while rendering.
-The browser sends events only from the production build (`enabled: process.env.NODE_ENV === "production"`).
+The events are sent only from the production build (`enabled: process.env.NODE_ENV === "production"`).
 `dataCollection` turns off the collection of user information and request bodies in all runtimes.
 
 ## Sign-in and guest registration (`src/auth-form/`)
