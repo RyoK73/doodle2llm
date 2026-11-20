@@ -21,6 +21,13 @@
 | `SUPABASE_LOCAL_DB_URL`         | Tests that connect to Postgres with `pg` | Connection string of the local DB                |
 | `PROJECTID`                     | `pnpm type:gen`, `pnpm test:remote`      | Project ID of the remote Supabase                |
 | `SUPABASE_ACCESS_TOKEN`         | `pnpm test:remote`                       | Access token for the Supabase Management API     |
+| `SENTRY_AUTH_TOKEN`             | Build (`withSentryConfig`)               | Auth token for uploading source maps             |
+| `NEXT_PUBLIC_SENTRY_DSN`        | Sentry and Vercel integration            | A value the Sentry Vercel setup asks you to set  |
+| `SENTRY_ORG`                    | Sentry and Vercel integration            | A value the Sentry Vercel setup asks you to set  |
+| `SENTRY_PROJECT`                | Sentry and Vercel integration            | A value the Sentry Vercel setup asks you to set  |
+| `SENTRY_PUBLIC_KEY`             | Sentry and Vercel integration            | A value the Sentry Vercel setup asks you to set  |
+| `SENTRY_OTLP_TRACES_URL`        | Sentry and Vercel integration            | A value the Sentry Vercel setup asks you to set  |
+| `SENTRY_VERCEL_LOG_DRAIN_URL`   | Sentry and Vercel integration            | A value the Sentry Vercel setup asks you to set  |
 
 - The app validates `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SECRET_KEY` with zod (`src/supabase/utils/env.ts`).
 - `getSiteUrl` in `src/utils/getSiteUrl.ts` validates `NEXT_PUBLIC_SITE_URL` with zod and returns it.
@@ -38,6 +45,15 @@
 - The local values are printed by `pnpm db:status` after `pnpm db:start`.
   The local value of `SUPABASE_SECRET_KEY` is the key that starts with `sb_secret_`.
   It is also required by the tests that sign in anonymously against the real local Supabase.
+- The code does not read `SENTRY_*` and `NEXT_PUBLIC_SENTRY_DSN` at present.
+  The DSN, `org` and `project` are written directly in `src/instrumentation-client.ts`, `sentry.server.config.ts` and `next.config.ts`.
+  They are the variables that the Sentry setup for Vercel asks you to set.
+- `SENTRY_AUTH_TOKEN` is used to upload source maps at build time.
+  Do not add `NEXT_PUBLIC_`, and do not expose it to the browser.
+  The build plugin file `.env.sentry-build-plugin` is already in `.gitignore`.
+- To try Sentry with `next build` and `next start` locally, set the 7 variables above in `.env.local`.
+- In production, register the 7 variables above in the Environment Variables of Vercel.
+- You can check the values of the 7 variables above in Dashboard > Environment Variables of Vercel.
 - Never commit real values.
 
 ## Next
