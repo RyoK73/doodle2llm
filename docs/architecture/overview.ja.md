@@ -154,7 +154,7 @@ Sentryは、実行環境ごとに設定します。
 
 サーバーとエッジの設定は、`src/instrumentation.ts`から読み込みます。
 `src/app/global-error.tsx`は、描画中に起きたエラーを送ります。
-ブラウザは、本番ビルドのときだけ送信します(`enabled: process.env.NODE_ENV === "production"`)。
+本番ビルドのときだけ送信されます(`enabled: process.env.NODE_ENV === "production"`)。
 `dataCollection`で、すべての実行環境について、ユーザー情報とリクエスト本文の収集を止めています。
 
 ## サインインとゲスト登録(`src/auth-form/`)
