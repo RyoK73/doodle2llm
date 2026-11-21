@@ -212,6 +212,21 @@
   `/`だけは、末尾が`/`になります(例: `https://example.com/`)。
   `/signin`と`/signup`には、末尾のスラッシュがありません。
 - 各エントリは`url`だけです。
+- `/sitemap.xml`は、`src/proxy.ts`のmatcherから除外されます。
+  そのため、クローラーの取得で認証セッションの更新は走りません。
+
+## robots.txt
+
+`src/app/robots.ts`が、`/robots.txt`を配信します。
+`getSiteUrl()`(`src/utils/getSiteUrl.ts`)の値を、`src/robots/`の`buildRobots`に渡すだけです。
+
+- すべてのクローラー(`User-Agent: *`)に、`/`を許可します。
+- `/sketches`(配下を含む)は、拒否します。
+  サインインが必要なパスだからです。
+- `/monitoring`は、拒否の対象にしていません。
+- `Sitemap`は、`getSiteUrl()`の値に`/sitemap.xml`をつなげたURLです。
+- `/robots.txt`は、`src/proxy.ts`のmatcherから除外されます。
+  そのため、クローラーの取得で認証セッションの更新は走りません。
   `lastModified`、`changeFrequency`、`priority`は指定しません。
 - `NEXT_PUBLIC_SITE_URL`が不正な場合は、`getSiteUrl()`の例外をそのまま伝えます。
   環境変数は[環境変数](../setup/environment.ja.md)を参照してください。

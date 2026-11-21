@@ -7,6 +7,7 @@ Anonymous sign-in is enabled (`enable_anonymous_sign_ins = true` in `supabase/co
 
 - `src/proxy.ts` runs `updateSession` (`src/supabase/auth/proxy.ts`) on each request.
   - Static files and images are excluded by the `matcher`.
+    `/robots.txt` and `/sitemap.xml` are also excluded.
   - The Sentry tunnel (`/monitoring`) is also excluded by the `matcher`.
 - `updateSession` creates a Supabase server client and syncs the cookies.
   Then it passes the same client to `getAuthState` to determine the auth state.

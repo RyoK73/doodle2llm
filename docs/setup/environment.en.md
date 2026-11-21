@@ -9,25 +9,25 @@
 
 ## Variables
 
-| Variable                        | Used by                                  | Purpose                                          |
-| ------------------------------- | ---------------------------------------- | ------------------------------------------------ |
-| `NEXT_PUBLIC_SUPABASE_URL`      | App (browser and server)                 | Supabase project URL                             |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | App (browser and server)                 | Supabase anon key                                |
-| `SUPABASE_SECRET_KEY`           | App (server only)                        | Supabase secret key (for anonymous sign-in)      |
-| `NEXT_PUBLIC_SITE_URL`          | App (`getSiteUrl`)                       | Public URL of the site (`metadataBase`, sitemap) |
-| `SUPABASE_LOCAL_URL`            | Tests against the local DB               | API URL of the local Supabase                    |
-| `SUPABASE_LOCAL_ANON_KEY`       | Tests against the local DB               | anon key of the local Supabase                   |
-| `SUPABASE_LOCAL_ADMIN_KEY`      | Tests against the local DB               | Admin key of the local Supabase                  |
-| `SUPABASE_LOCAL_DB_URL`         | Tests that connect to Postgres with `pg` | Connection string of the local DB                |
-| `PROJECTID`                     | `pnpm type:gen`, `pnpm test:remote`      | Project ID of the remote Supabase                |
-| `SUPABASE_ACCESS_TOKEN`         | `pnpm test:remote`                       | Access token for the Supabase Management API     |
-| `SENTRY_AUTH_TOKEN`             | Build (`withSentryConfig`)               | Auth token for uploading source maps             |
-| `NEXT_PUBLIC_SENTRY_DSN`        | Sentry and Vercel integration            | Not read by the code. Set by Vercel integration  |
-| `SENTRY_ORG`                    | Sentry and Vercel integration            | Not read by the code. Set by Vercel integration  |
-| `SENTRY_PROJECT`                | Sentry and Vercel integration            | Not read by the code. Set by Vercel integration  |
-| `SENTRY_PUBLIC_KEY`             | Sentry and Vercel integration            | Not read by the code. Set by Vercel integration  |
-| `SENTRY_OTLP_TRACES_URL`        | Sentry and Vercel integration            | Not read by the code. Set by Vercel integration  |
-| `SENTRY_VERCEL_LOG_DRAIN_URL`   | Sentry and Vercel integration            | Not read by the code. Set by Vercel integration  |
+| Variable                        | Used by                                  | Purpose                                                  |
+| ------------------------------- | ---------------------------------------- | -------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | App (browser and server)                 | Supabase project URL                                     |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | App (browser and server)                 | Supabase anon key                                        |
+| `SUPABASE_SECRET_KEY`           | App (server only)                        | Supabase secret key (for anonymous sign-in)              |
+| `NEXT_PUBLIC_SITE_URL`          | App (`getSiteUrl`)                       | Public URL of the site (`metadataBase`, sitemap, robots) |
+| `SUPABASE_LOCAL_URL`            | Tests against the local DB               | API URL of the local Supabase                            |
+| `SUPABASE_LOCAL_ANON_KEY`       | Tests against the local DB               | anon key of the local Supabase                           |
+| `SUPABASE_LOCAL_ADMIN_KEY`      | Tests against the local DB               | Admin key of the local Supabase                          |
+| `SUPABASE_LOCAL_DB_URL`         | Tests that connect to Postgres with `pg` | Connection string of the local DB                        |
+| `PROJECTID`                     | `pnpm type:gen`, `pnpm test:remote`      | Project ID of the remote Supabase                        |
+| `SUPABASE_ACCESS_TOKEN`         | `pnpm test:remote`                       | Access token for the Supabase Management API             |
+| `SENTRY_AUTH_TOKEN`             | Build (`withSentryConfig`)               | Auth token for uploading source maps                     |
+| `NEXT_PUBLIC_SENTRY_DSN`        | Sentry and Vercel integration            | Not read by the code. Set by Vercel integration          |
+| `SENTRY_ORG`                    | Sentry and Vercel integration            | Not read by the code. Set by Vercel integration          |
+| `SENTRY_PROJECT`                | Sentry and Vercel integration            | Not read by the code. Set by Vercel integration          |
+| `SENTRY_PUBLIC_KEY`             | Sentry and Vercel integration            | Not read by the code. Set by Vercel integration          |
+| `SENTRY_OTLP_TRACES_URL`        | Sentry and Vercel integration            | Not read by the code. Set by Vercel integration          |
+| `SENTRY_VERCEL_LOG_DRAIN_URL`   | Sentry and Vercel integration            | Not read by the code. Set by Vercel integration          |
 
 - The app validates `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SECRET_KEY` with zod (`src/supabase/utils/env.ts`).
 - `getSiteUrl` in `src/utils/getSiteUrl.ts` validates `NEXT_PUBLIC_SITE_URL` with zod and returns it.
@@ -36,7 +36,7 @@
   - A trailing slash is removed.
   - Only when `VERCEL_ENV` is `production` (the production of Vercel), a value that does not start with `https://` is an error.
     When it is not set in production, it is also an error, because `http://localhost:3000` is not `https://`.
-  - It is used for `metadataBase` in `src/app/layout.tsx` and for the URLs in `src/app/sitemap.ts`.
+  - It is used for `metadataBase` in `src/app/layout.tsx` and for the URLs in `src/app/sitemap.ts` and `src/app/robots.ts`.
 - `SUPABASE_SECRET_KEY` bypasses RLS.
   Do not add `NEXT_PUBLIC_`, and do not expose it to the browser.
   Only the client for anonymous sign-in uses it. See [Authentication](../architecture/auth.en.md).

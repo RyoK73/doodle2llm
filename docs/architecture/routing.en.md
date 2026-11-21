@@ -212,6 +212,21 @@ It only passes the value of `getSiteUrl()` (`src/utils/getSiteUrl.ts`) to `build
   Only `/` ends with a slash (for example, `https://example.com/`).
   `/signin` and `/signup` have no trailing slash.
 - Each entry has only `url`.
+- `/sitemap.xml` is excluded by the matcher of `src/proxy.ts`.
+  So a fetch by a crawler does not refresh the auth session.
+
+## robots.txt
+
+`src/app/robots.ts` serves `/robots.txt`.
+It only passes the value of `getSiteUrl()` (`src/utils/getSiteUrl.ts`) to `buildRobots` in `src/robots/`.
+
+- It allows `/` for all crawlers (`User-Agent: *`).
+- It disallows `/sketches` (including the paths under it).
+  The reason is that these paths need sign-in.
+- `/monitoring` is not disallowed.
+- `Sitemap` is the value of `getSiteUrl()` followed by `/sitemap.xml`.
+- `/robots.txt` is excluded by the matcher of `src/proxy.ts`.
+  So a fetch by a crawler does not refresh the auth session.
   `lastModified`, `changeFrequency` and `priority` are not specified.
 - When `NEXT_PUBLIC_SITE_URL` is invalid, the exception of `getSiteUrl()` is passed on as it is.
   See [Environment variables](../setup/environment.en.md).
