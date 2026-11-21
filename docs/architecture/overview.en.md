@@ -41,6 +41,7 @@ See [Directory structure](../rules/directory-structure.en.md) for the rule.
 | `src/design-system/`            | Generic UI parts                                                 |
 | `src/sketch-list/`              | Showing the sketch list (Server and Client Components)           |
 | `src/sitemap/`                  | Building the sitemap entries (`buildSitemap`)                    |
+| `src/robots/`                   | Building the content of robots.txt (`buildRobots`)               |
 | `src/error-pages/`              | Shared parts for the 404 and error pages                         |
 | `src/error-logging/`            | Sending the errors that occur in the browser to Sentry           |
 | `src/supabase/`                 | Supabase clients, auth, CRUD and DB tests                        |

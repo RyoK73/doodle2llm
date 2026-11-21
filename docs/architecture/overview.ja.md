@@ -40,6 +40,7 @@ fabric.jsだけは、`^`を付けずにバージョンを固定しています�
 | `src/sketch-detail/`            | スケッチの個別ページ(表示、描画、DBへの保存)                 |
 | `src/sketch-list/`              | スケッチ一覧の表示(Server ComponentとClient Component)       |
 | `src/sitemap/`                  | サイトマップのエントリの組み立て(`buildSitemap`)             |
+| `src/robots/`                   | robots.txtの内容の組み立て(`buildRobots`)                    |
 | `src/design-system/`            | 汎用UI部品                                                   |
 | `src/error-pages/`              | 404とエラー画面の共通部品                                    |
 | `src/error-logging/`            | ブラウザで起きたエラーのSentryへの送信                       |
