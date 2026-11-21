@@ -201,7 +201,7 @@
 | `null`(存在しない、または他人のスケッチ) | `{}`                            |
 | 取得失敗                                 | `{}`                            |
 
-## サイトマップ
+## sitemap.xml
 
 `src/app/sitemap.ts`が、`/sitemap.xml`を配信します。
 `getSiteUrl()`(`src/utils/getSiteUrl.ts`)の値を、`src/sitemap/`の`buildSitemap`に渡すだけです。
@@ -211,9 +211,12 @@
 - URLは`getSiteUrl()`の値に、パスをつなげた形です。
   `/`だけは、末尾が`/`になります(例: `https://example.com/`)。
   `/signin`と`/signup`には、末尾のスラッシュがありません。
-- 各エントリは`url`だけです。
+- 各エントリは`url`だけを持っています。
+  `lastModified`、`changeFrequency`、`priority`は指定しません。
 - `/sitemap.xml`は、`src/proxy.ts`のmatcherから除外されます。
   そのため、クローラーの取得で認証セッションの更新は走りません。
+- `NEXT_PUBLIC_SITE_URL`が不正な場合は、`getSiteUrl()`の例外をそのまま伝えます。
+  環境変数は[環境変数](../setup/environment.ja.md)を参照してください。
 
 ## robots.txt
 
@@ -227,7 +230,6 @@
 - `Sitemap`は、`getSiteUrl()`の値に`/sitemap.xml`をつなげたURLです。
 - `/robots.txt`は、`src/proxy.ts`のmatcherから除外されます。
   そのため、クローラーの取得で認証セッションの更新は走りません。
-  `lastModified`、`changeFrequency`、`priority`は指定しません。
 - `NEXT_PUBLIC_SITE_URL`が不正な場合は、`getSiteUrl()`の例外をそのまま伝えます。
   環境変数は[環境変数](../setup/environment.ja.md)を参照してください。
 

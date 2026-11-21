@@ -201,7 +201,7 @@ There is no `twitter-image`; this one image serves both.
 | `null` (nonexistent, or a sketch of another user) | `{}`                           |
 | Error                                             | `{}`                           |
 
-## Sitemap
+## sitemap.xml
 
 `src/app/sitemap.ts` serves `/sitemap.xml`.
 It only passes the value of `getSiteUrl()` (`src/utils/getSiteUrl.ts`) to `buildSitemap` in `src/sitemap/`.
@@ -212,8 +212,11 @@ It only passes the value of `getSiteUrl()` (`src/utils/getSiteUrl.ts`) to `build
   Only `/` ends with a slash (for example, `https://example.com/`).
   `/signin` and `/signup` have no trailing slash.
 - Each entry has only `url`.
+  `lastModified`, `changeFrequency` and `priority` are not specified.
 - `/sitemap.xml` is excluded by the matcher of `src/proxy.ts`.
   So a fetch by a crawler does not refresh the auth session.
+- When `NEXT_PUBLIC_SITE_URL` is invalid, the exception of `getSiteUrl()` is passed on as it is.
+  See [Environment variables](../setup/environment.en.md).
 
 ## robots.txt
 
@@ -227,7 +230,6 @@ It only passes the value of `getSiteUrl()` (`src/utils/getSiteUrl.ts`) to `build
 - `Sitemap` is the value of `getSiteUrl()` followed by `/sitemap.xml`.
 - `/robots.txt` is excluded by the matcher of `src/proxy.ts`.
   So a fetch by a crawler does not refresh the auth session.
-  `lastModified`, `changeFrequency` and `priority` are not specified.
 - When `NEXT_PUBLIC_SITE_URL` is invalid, the exception of `getSiteUrl()` is passed on as it is.
   See [Environment variables](../setup/environment.en.md).
 
